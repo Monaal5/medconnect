@@ -9,6 +9,7 @@ import Rentals from './pages/Rentals';
 import LabDashboard from './pages/LabDashboard';
 import ChemistDashboard from './pages/ChemistDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import Placeholder from './components/Placeholder';
 
 import { useGlobal } from './context/GlobalContext';
 
