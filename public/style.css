@@ -1,0 +1,189 @@
+:root {
+    /* Premium Light-Glass Theme */
+    --primary: #10b981;
+    --primary-light: #059669;
+    --bg-main: #f8fafc;
+    --bg-surface: rgba(255, 255, 255, 0.85);
+    --border-main: rgba(0, 0, 0, 0.1);
+    --text-main: #000000;
+    --text-muted: #4b5563;
+    --glass-blur: blur(20px);
+
+    --secondary: #3b82f6;
+    --danger: #ef4444;
+    --success: #10b981;
+    --warning: #f59e0b;
+
+    --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 24px;
+
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: #f8fafc !important;
+    color: #000000 !important;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+}
+
+/* Glass Enhancement Utility */
+.glass {
+    background: var(--bg-surface) !important;
+    backdrop-filter: var(--glass-blur) !important;
+    -webkit-backdrop-filter: var(--glass-blur) !important;
+    border: 1px solid var(--border-main) !important;
+    box-shadow: var(--shadow-sm) !important;
+}
+
+/* LOGIN PAGE CONSOLIDATED STYLES */
+.login-page {
+    display: flex;
+    min-height: 100vh;
+    background: #ffffff !important;
+    width: 100%;
+}
+
+.login-sidebar {
+    width: 42%;
+    background: #f8fafc !important;
+    padding: 3rem 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2.5rem;
+    position: relative;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.brand-logo {
+    width: 80px !important;
+    height: 80px !important;
+    object-fit: contain;
+    background: white !important;
+    padding: 12px !important;
+    border-radius: 20px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+.sidebar-brand h1 {
+    font-size: 2.2rem !important;
+    font-weight: 800 !important;
+    color: #000000 !important;
+}
+
+.sidebar-brand span {
+    color: #10b981 !important;
+}
+
+.sidebar-content h2 {
+    font-size: 3.2rem !important;
+    font-weight: 800 !important;
+    margin-bottom: 1.5rem !important;
+    color: #000000 !important;
+}
+
+.sidebar-content p {
+    font-size: 1.25rem !important;
+    color: #4b5563 !important;
+}
+
+.login-stats {
+    display: flex;
+    gap: 4.5rem;
+}
+
+.login-stat-item h3 {
+    font-size: 2.8rem !important;
+    font-weight: 800 !important;
+    color: #10b981 !important;
+}
+
+.login-main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    background: #ffffff !important;
+}
+
+.login-form-container {
+    width: 100%;
+    max-width: 580px;
+}
+
+.form-header h2 {
+    font-size: 2.5rem !important;
+    font-weight: 800 !important;
+    color: #000000 !important;
+}
+
+.role-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+}
+
+.role-card {
+    padding: 1.25rem !important;
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    border-radius: 24px !important;
+    display: flex !important;
+    gap: 1.25rem !important;
+    align-items: center !important;
+}
+
+.role-card.active {
+    border-color: #10b981 !important;
+    border-width: 2px !important;
+}
+
+.form-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.input-group label {
+    color: #10b981 !important;
+    font-weight: 800 !important;
+}
+
+.input-group input {
+    width: 100% !important;
+    padding: 1rem 1.25rem !important;
+    background: #f8fafc !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    border-radius: 16px !important;
+}
+
+.login-btn {
+    width: 100% !important;
+    background: #10b981 !important;
+    color: white !important;
+    padding: 1.1rem !important;
+    border-radius: 18px !important;
+    font-weight: 800 !important;
+}
