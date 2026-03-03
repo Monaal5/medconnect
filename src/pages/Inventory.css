@@ -1,0 +1,135 @@
+.inventory-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    gap: 2rem;
+}
+
+.search-bar {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    padding: 0.8rem 1.25rem;
+    border-radius: 16px;
+    border: 1px solid var(--border-main);
+}
+
+.search-bar input {
+    border: none;
+    background: none;
+    outline: none;
+    width: 100%;
+    font-family: inherit;
+    color: var(--text-main);
+}
+
+.filter-chips {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.chip {
+    padding: 0.6rem 1.25rem;
+    background: white;
+    border: 1px solid var(--border-main);
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.chip.active,
+.chip:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.inventory-card {
+    border-radius: 24px;
+    overflow: hidden;
+}
+
+.med-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.med-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(16, 185, 129, 0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+}
+
+.med-info .name {
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.med-info .dose {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.cat-tag {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--secondary);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+}
+
+.stock-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.stock-count {
+    font-weight: 700;
+}
+
+.stock-count.low {
+    color: var(--danger);
+}
+
+.edit-input input {
+    width: 80px;
+    height: 36px;
+}
+
+.action-row button {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid var(--border-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    color: var(--text-muted);
+    transition: var(--transition);
+}
+
+.action-row button:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.action-row .save-btn:hover {
+    background: var(--success);
+    color: white;
+    border-color: var(--success);
+}

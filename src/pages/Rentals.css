@@ -1,0 +1,140 @@
+.rental-search-box.glass {
+    padding: 2rem;
+    margin-bottom: 3rem;
+    border-radius: 24px;
+}
+
+.search-inputs {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.search-field {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.search-field input {
+    border: none;
+    background: none;
+    outline: none;
+    width: 100%;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--text-main);
+}
+
+.search-divider {
+    width: 1px;
+    height: 32px;
+    background: var(--border-main);
+}
+
+.rental-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 2rem;
+}
+
+.rental-card {
+    padding: 2rem;
+    border-radius: 24px;
+    transition: all 0.3s ease;
+}
+
+.rental-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-md);
+}
+
+.status-badge-float {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.status-badge-float.available {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--primary);
+}
+
+.status-badge-float.rented {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+}
+
+.rental-icon {
+    width: 56px;
+    height: 56px;
+    background: rgba(16, 185, 129, 0.1);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+}
+
+.rental-content h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.rental-content .category {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+}
+
+.rental-pricing {
+    display: grid;
+    grid-template-columns: 1fr 1px 1.2fr;
+    gap: 1rem;
+    background: rgba(243, 244, 246, 0.5);
+    padding: 1.25rem;
+    border-radius: 16px;
+    margin-bottom: 1.5rem;
+    align-items: center;
+}
+
+.price-divider {
+    width: 1px;
+    height: 30px;
+    background: var(--border-main);
+}
+
+.price-item span {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.price-item strong {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.rental-features {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}

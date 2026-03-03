@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedConnect - Comprehensive Project Presentation</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0ca678;
+            --primary-dark: #087f5b;
+            --primary-soft: rgba(12, 166, 120, 0.1);
+            --secondary: #228be6;
+            --secondary-dark: #1864ab;
+            --dark: #0b1a23;
+            --darker: #050d12;
+            --light: #f8f9fa;
+            --text-muted: #9ca3af;
+            --accent: #fab005;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--darker);
+            color: white;
+            overflow: hidden;
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            transition: transform 1s cubic-bezier(0.85, 0, 0.15, 1);
+        }
+
+        .slide {
+            min-width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5rem 4rem;
+            /* Balanced padding */
+            box-sizing: border-box;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            overflow-y: auto;
+            /* Enable vertical scroll */
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) transparent;
+        }
+
+        .slide-content {
+            width: 100%;
+            max-width: 1100px;
+            /* Optimal reading width */
+            z-index: 2;
+            animation: slideUp 0.8s ease-out;
+            padding-bottom: 6rem;
+            /* Space for content and bottom padding */
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide.white {
+            background: white;
+            color: var(--darker);
+        }
+
+        .slide.gradient {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--darker) 100%);
+        }
+
+        /* Background Accents */
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 10% 20%, rgba(12, 166, 120, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(34, 139, 230, 0.05) 0%, transparent 40%);
+            z-index: 1;
+        }
+
+        /* Nav Arrows - Bottom Right Minimalist */
+        .nav-arrows {
+            position: fixed;
+            bottom: 2rem;
+            right: 3rem;
+            display: flex;
+            gap: 1.5rem;
+            z-index: 1000;
+        }
+
+        .arrow-btn {
+            background: transparent;
+            color: var(--primary);
+            border: none;
+            font-size: 2.5rem;
+            /* Larger arrows */
+            cursor: pointer;
+            transition: 0.3s;
+            padding: 10px;
+            line-height: 1;
+            font-weight: 300;
+        }
+
+        .arrow-btn:hover {
+            color: var(--primary-dark);
+            transform: scale(1.2);
+        }
+
+        .arrow-btn.secondary {
+            color: var(--text-muted);
+        }
+
+        .arrow-btn.secondary:hover {
+            color: white;
+        }
+
+        /* Removed screenshot styles */
+
+        .tag {
+            background: var(--primary-soft);
+            color: var(--primary);
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            display: inline-block;
+            border: 1px solid rgba(12, 166, 120, 0.2);
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            margin: 0;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1;
+        }
+
+        h1 span {
+            color: var(--primary);
+        }
+
+        h2 {
+            font-size: 2.75rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        .slide.white h2 {
+            color: var(--darker);
+        }
+
+        .slide h2 span {
+            color: var(--primary);
+        }
+
+        p {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto 1.5rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .slide.white p {
+            color: #4b5563;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            /* More compact items */
+            gap: 1.5rem;
+            width: 100%;
+            text-align: left;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1.5rem;
+            /* Reduced padding */
+            border-radius: 24px;
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide.white .card {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            color: var(--darker);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .card h3::after {
+            content: '';
+            width: 40px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .card p {
+            font-size: 1rem;
+            margin: 0;
+            color: var(--text-muted);
+        }
+
+        .slide.white .card p {
+            color: #6b7280;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 3rem;
+            right: 3rem;
+            display: flex;
+            gap: 1rem;
+            z-index: 100;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1.25rem 2.5rem;
+            border-radius: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(12, 166, 120, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.9rem;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        .btn.secondary {
+            background: var(--dark);
+            border: 2px solid var(--primary);
+            box-shadow: none;
+        }
+
+        .progress-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 6px;
+            background: var(--primary);
+            width: 0%;
+            z-index: 1000;
+            transition: width 0.5s ease;
+        }
+
+        /* Specific Slide Designs */
+        .problem-list {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .problem-list li {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            padding-left: 3rem;
+            position: relative;
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        .problem-list li::before {
+            content: '✕';
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-weight: 900;
+        }
+
+        .solution-tag {
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .tech-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .slide-content h2 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="progress-indicator" id="progress"></div>
+    <div class="nav-arrows">
+        <button class="arrow-btn secondary" onclick="prev()">←</button>
+        <button class="arrow-btn" onclick="next()">→</button>
+    </div>
+
+    <div class="slide-container" id="container">
+
+        <!-- Slide 1: Cover -->
+        <div class="slide gradient">
+            <div class="tag">Healthcare 4.0 Ecosystem</div>
+            <div class="slide-content" style="text-align: center;">
+                <h1>MED<span>CONNECT</span></h1>
+                <h2 style="color: white">The Unified Health Architecture</h2>
+                <p>Bridging the fragmented gap between Doctors, Patients, Chemists, Labs, and Vendors through AI and
+                    Real-time Synchronization.</p>
+                <div
+                    style="margin-top: 4rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; text-align: left;">
+                    <div class="card">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">MISSION</h4>
+                        <p style="font-size: 0.95rem;">To eliminate healthcare fragmentation by creating a seamless
+                            digital bridge for medical data and logistics.</p>
+                    </div>
+                    <div class="card">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">VISION</h4>
+                        <p style="font-size: 0.95rem;">Building a world where clinical intelligence is instant,
+                            personalized, and universally accessible.</p>
+                    </div>
+                    <div class="card">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">SCALE</h4>
+                        <p style="font-size: 0.95rem;">Designed for thousands of clinics, labs, and pharmacies to
+                            operate as a single efficient network.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: The Problem (Crisis Detail) -->
+        <div class="slide white">
+            <div class="tag" style="background: #fee2e2; color: #ef4444; border-color: #fca5a5;">The Crisis</div>
+            <div class="slide-content">
+                <h2>The <span>Fragmented</span> Reality</h2>
+                <p>Modern healthcare suffers from critical data silos that cost lives and delay treatment. Current
+                    systems are "Digital Islands" that don't talk to each other.</p>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3>Medical History Gap</h3>
+                        <p>Doctors spend 40% of consultation time just gathering files. 30% of critical history is lost
+                            during referrals, leading to redundant tests and clinical errors.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Inventory Paralysis</h3>
+                        <p>Clinic stock is managed on paper. Pharmacies have no visibility into local demand. This
+                            causes life-saving drugs to expire while patients go without.</p>
+                    </div>
+                    <div class="card">
+                        <h3>The Diagnostic Lag</h3>
+                        <p>Patients wait days for physical reports to be hand-carried. This "Time-to-Result" gap is the
+                            primary cause of delayed critical care intervention.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Logistical Chaos</h3>
+                        <p>Needy patients struggle to find wheelchairs or oxygen in emergencies. Local rentals are
+                            undocumented and difficult to locate under pressure.</p>
+                    </div>
+                </div>
+
+                <div
+                    style="margin-top: 3rem; background: #fff5f5; padding: 2rem; border-radius: 20px; border: 1px solid #feb2b2;">
+                    <h4 style="color: #c53030;">THE BOTTOM LINE</h4>
+                    <p style="color: #c53030; margin: 0;">Fragmented data means slower care, higher costs, and
+                        increased risk of preventable mortality.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: The Solution -->
+        <div class="slide gradient">
+            <div class="tag">The Paradigm Shift</div>
+            <div class="slide-content">
+                <h2>MedConnect: <span>Unified</span> Care</h2>
+                <p>A 360° ecosystem where every stakeholder is connected through a single source of truth. We replace
+                    "Digital Islands" with a "Clinical Super-Highway."</p>
+
+                <div class="grid">
+                    <div class="card">
+                        <h4 class="solution-tag">REAL-TIME SYNC</h4>
+                        <h3>Shared Data Layer</h3>
+                        <p>A universal patient ID connects records across clinics, labs, and pharmacies. Update once,
+                            reflect everywhere instantly.</p>
+                    </div>
+                    <div class="card">
+                        <h4 class="solution-tag">AI CO-PILOT</h4>
+                        <h3>Clinical Intelligence</h3>
+                        <p>Proprietary algorithms that analyze symptoms and suggest treatments based on live local
+                            inventory and patient history.</p>
+                    </div>
+                    <div class="card">
+                        <h4 class="solution-tag">CLOSED LOOP</h4>
+                        <h3>Workflow Integration</h3>
+                        <p>Prescriptions flow directly to the pharmacist. Test orders flow to the lab. Rentals are
+                            booked
+                            via pincode search.</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 3rem; text-align: center;">
+                    <h4 style="color: var(--primary);">THE CONNECTIVITY ADVANTAGE</h4>
+                    <p style="max-width: 600px; margin: 1rem auto; font-size: 1rem;">Reducing care cycle from days to
+                        minutes by eliminating manual handovers and paper friction.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Market Dynamics -->
+        <div class="slide white">
+            <div class="tag">Market Opportunity</div>
+            <div class="slide-content">
+                <h2>The <span>$800 Billion</span> Market</h2>
+                <p>Digital Health is no longer an option—it is a global necessity. MedConnect captures the intersection
+                    of Health-Tech and E-Commerce.</p>
+
+                <div class="grid">
+                    <div class="card">
+                        <div class="tech-icon">🌍</div>
+                        <h3>Global Demand</h3>
+                        <p>Rising chronic diseases require longitudinal tracking. Governments are mandating digital EHR
+                            systems for all healthcare providers.</p>
+                    </div>
+                    <div class="card">
+                        <div class="tech-icon">⚖️</div>
+                        <h3>Regulatory Pressure</h3>
+                        <p>Compliance standards (GDPR, HIPAA, ABDM) require secure, audited data handling—exactly what
+                            MedConnect is built for from the ground up.</p>
+                    </div>
+                    <div class="card">
+                        <div class="tech-icon">💸</div>
+                        <h3>Operational Waste</h3>
+                        <p>Healthcare providers waste billions on paper logistics and inventory mismanagement.
+                            MedConnect offers a 25% efficiency gain through automation.</p>
+                    </div>
+                    <div class="card">
+                        <div class="tech-icon">📱</div>
+                        <h3>Consumer Expectation</h3>
+                        <p>Modern patients expect Amazon-like speed for rentals and reports. MedConnect delivers a
+                            consumer-grade experience for professional care.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Doctor Portal Deep Dive -->
+        <div class="slide gradient">
+            <div class="tag">Provider Empowerment</div>
+            <div class="slide-content">
+                <h2><span>Doctor</span> Dashboard</h2>
+                <p>The clinical engine of the platform. A high-fidelity workspace designed for practitioners who need
+                    speed and intelligence.</p>
+
+                <div class="card" style="margin-bottom: 2rem;">
+                    <h3>AI-Powered Clinical Flow</h3>
+                    <p>Our generator doesn't just write prescriptions. It analyzes symptoms using a medical reasoning
+                        engine and cross-references them with the clinic's local pharmacy stock in real-time. If a
+                        medicine is out of stock, the AI suggests alternatives that are available nearby.</p>
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h4 class="solution-tag">HISTORY</h4>
+                        <h3>Clinical Timeline</h3>
+                        <p>A unified view of the patient's entire journey. Consultations, surgeries, and chronic alerts
+                            are visible at a glance, preventing drug collisions.</p>
+                    </div>
+                    <div class="card">
+                        <h4 class="solution-tag">DIAGNOSTICS</h4>
+                        <h3>Lab Integration</h3>
+                        <p>One-click diagnostic ordering. Doctors can see Sample Status (Collected/In-Progress) and get
+                            instant alerts for abnormal values.</p>
+                    </div>
+                    <div class="card">
+                        <h4 class="solution-tag">STOCK</h4>
+                        <h3>Live Inventory</h3>
+                        <p>Never prescribe an unavailable medicine again. See live stock counts for every drug in the
+                            pharmacy while you sit with the patient.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Patient Portal Deep Dive -->
+        <div class="slide white">
+            <div class="tag"
+                style="background: var(--primary-soft); color: var(--secondary); border-color: var(--secondary);">
+                Patient Ownership</div>
+            <div class="slide-content">
+                <h2><span>Patient</span> Health Hub</h2>
+                <p>Putting the patient in the center of the care ecosystem. Ownership of data leads to better health
+                    outcomes.</p>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3>Health Summary 360</h3>
+                        <p>A simplified view of overall "Health Stability." Includes real-time reminders for medication
+                            adherence and scheduled follow-ups.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Digital Health Vault</h3>
+                        <p>Encrypted storage for all lifetime records. Prescriptions, lab results, and billing invoices
+                            are archived and shareable with a single tap.</p>
+                    </div>
+                    <div class="card">
+                        <h3>The Services Hub</h3>
+                        <p>Hyper-local marketplace. Book home collection for blood tests or find the nearest available
+                            wheelchair for rent based on current GPS location.</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 3rem; background: #e7f5ff; padding: 2rem; border-radius: 20px;">
+                    <h4 style="color: var(--secondary);">KEY FEATURES</h4>
+                    <ul style="column-count: 2; font-size: 0.95rem; color: #495057; margin-top: 1rem;">
+                        <li>Instant E-Prescription Downloads</li>
+                        <li>Interactive Clinical Timeline</li>
+                        <li>Automated Lab Result Flagging</li>
+                        <li>Pincode-Based Equipment Search</li>
+                        <li>Integrated Payment History</li>
+                        <li>One-Tap Follow-up Booking</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Chemist & Pharma -->
+        <div class="slide gradient">
+            <div class="tag">Retail Logic</div>
+            <div class="slide-content">
+                <h2><span>Chemist</span> Operations</h2>
+                <p>Transforming traditional pharmacies into automated healthcare logistics centers.</p>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3>Frictionless Billing</h3>
+                        <p>GST-compliant invoices are generated directly from the digital prescription sent by the
+                            doctor. No manual entry, zero errors, 100% compliance.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Inventory Management</h3>
+                        <p>Real-time stock tracking with intelligent "Low Stock" alerts. The system alerts the manager
+                            when critical drugs reach reorder levels.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Demand Intelligence</h3>
+                        <p>Forecasting tools that analyze prescription trends to predict upcoming demand (e.g., Flu
+                            season) so stock never runs out.</p>
+                    </div>
+                </div>
+
+                <div class="card"
+                    style="margin-top: 2rem; background: rgba(12, 166, 120, 0.05); border: 1px dashed var(--primary);">
+                    <h4 style="color: var(--primary);">PHARMA HIGHLIGHTS</h4>
+                    <p style="font-size: 0.9rem;">Batch tracking for expiry management, integrated medicine barcode
+                        scanning support, and automated digital bill sharing via WhatsApp/Email.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Lab Diagnostics -->
+        <div class="slide white">
+            <div class="tag">Diagnostic Foundation</div>
+            <div class="slide-content">
+                <h2><span>Diagnostic</span> Portal</h2>
+                <p>Ensuring data reaches the doctor faster than the physical sample reaches the lab. Digital-first
+                    diagnostics.</p>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3>Test Queue Management</h3>
+                        <p>A professional queue system for lab operators. Prioritize samples based on "Urgancy Flags"
+                            set by the prescribing doctor.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Digital Result Studio</h3>
+                        <p>Specialized interface for result entry with automated abnormal value detection. Out-of-range
+                            parameters are instantly highlighted in red.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Smart Notification</h3>
+                        <p>The moment a report is signed by the Pathologist, it is pushed to both the Doctor and the
+                            Patient apps simultaneously.</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2.5rem; display: flex; gap: 1.5rem;">
+                    <div
+                        style="flex: 1; padding: 1.5rem; background: #f8f9fa; border-radius: 12px; border-left: 5px solid var(--primary);">
+                        <strong style="display: block; margin-bottom: 0.5rem;">Home Collection</strong>
+                        <p style="font-size: 0.85rem; margin: 0;">Logistical tracking of phlebotomists from booking to
+                            sample submission.</p>
+                    </div>
+                    <div
+                        style="flex: 1; padding: 1.5rem; background: #f8f9fa; border-radius: 12px; border-left: 5px solid var(--primary);">
+                        <strong style="display: block; margin-bottom: 0.5rem;">Clinical Accuracy</strong>
+                        <p style="font-size: 0.85rem; margin: 0;">Standardized reporting templates for CBC, Thyroid,
+                            LFT, and more.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Rental Marketplace -->
+        <div class="slide gradient">
+            <div class="tag">Emergency Marketplace</div>
+            <div class="slide-content">
+                <h2>Medical <span>Rentals</span></h2>
+                <p>The first professional marketplace for high-cost medical equipment rentals (Oxygen, Wheelchairs,
+                    Hospital Beds).</p>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3>Hyper-Local Search</h3>
+                        <p>Patients search by Pincode. The system shows live availability and distance to the nearest
+                            available unit.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Vendor Ecosystem</h3>
+                        <p>Vendors get a professional dashboard to list assets, track rental status, and manage security
+                            deposits efficiently.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Booking Logic</h3>
+                        <p>Integrated booking flow with automated agreement generation and maintenance tracking for
+                            high-value gear.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Super Admin -->
+        <div class="slide white">
+            <div class="tag">Security Oversight</div>
+            <div class="slide-content">
+                <h2>System <span>Super-Admin</span></h2>
+                <p>The core command center. Absolute oversight, absolute security, and architectural integrity.</p>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3>Audit Terminal</h3>
+                        <p>Non-erasable log of every single action on the platform. Critical for clinical accountability
+                            and legal compliance.</p>
+                    </div>
+                    <div class="card">
+                        <h3>RBAC Management</h3>
+                        <p>Dynamic Role-Based Access Control. Granular permissions management for clinics, hospitals,
+                            and pharmacies at scale.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Health Monitor</h3>
+                        <p>Real-time analytics of server load, database health, and system response times to ensure
+                            99.9% uptime.</p>
+                    </div>
+                </div>
+
+                <div
+                    style="margin-top: 3rem; background: #0b1a23; padding: 1.5rem; border-radius: 15px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #4ade80;">
+                    <div>[SYSTEM]: Security Scan: 100% Optimized</div>
+                    <div>[AUDIT]: Integrity Check: Verified</div>
+                    <div>[RBAC]: Permissions: Synced Across 5 Portals</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Tech Stack -->
+        <div class="slide gradient">
+            <div class="tag">The Engine Room</div>
+            <div class="slide-content">
+                <h2>Clinical-Grade <span>Stack</span></h2>
+                <p>MedConnect is built using high-performance, enterprise-ready technologies for sub-second
+                    synchronization.</p>
+
+                <div class="grid">
+                    <div class="card">
+                        <div class="tech-icon">⚛️</div>
+                        <h3>Frontend Architecture</h3>
+                        <p>Vite + React.js for ultra-fast UI rendering and professional animations. Lucide-React for
+                            intelligent iconography.</p>
+                    </div>
+                    <div class="card">
+                        <div class="tech-icon">🚄</div>
+                        <h3>State Logic</h3>
+                        <p>Global Context Architecture ensuring that medicine stock and patient data remain synchronized
+                            across independent portals.</p>
+                    </div>
+                    <div class="card">
+                        <div class="tech-icon">🔐</div>
+                        <h3>Security Protocol</h3>
+                        <p>Enterprise-grade encryption for all PII (Personally Identifiable Information) and robust
+                            authentication flows.</p>
+                    </div>
+                    <div class="card">
+                        <div class="tech-icon">☁️</div>
+                        <h3>Cloud Ready</h3>
+                        <p>Scalable infrastructure designed for microservices expansion and rapid deployment globally.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Conclusion -->
+        <div class="slide gradient">
+            <div class="slide-content" style="text-align: center;">
+                <div class="tag">Final Vision</div>
+                <h1>MED<span>CONNECT</span></h1>
+                <h2>Connecting Care, Empowering Lives.</h2>
+                <p>The future of healthcare isn't just about medicine—it's about connectivity. Bridging the fragments
+                    for a healthier world.</p>
+                <div style="margin-top: 3rem; display: flex; gap: 1rem; justify-content: center;">
+                    <button class="btn" style="border-radius: 50px;" onclick="update(0)">RETURN TO START</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 12;
+        const container = document.getElementById('container');
+        const progress = document.getElementById('progress');
+
+        function next() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                update(currentSlide);
+            }
+        }
+
+        function prev() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                update(currentSlide);
+            }
+        }
+
+        function update(index) {
+            currentSlide = index;
+            container.style.transform = `translateX(-${currentSlide * 100}vw)`;
+            progress.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') next();
+            if (e.key === 'ArrowLeft') prev();
+        });
+
+        update(0);
+    </script>
+</body>
+
+</html>

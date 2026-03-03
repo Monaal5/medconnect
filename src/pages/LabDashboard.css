@@ -1,0 +1,114 @@
+.lab-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 2.5rem;
+    align-items: start;
+}
+
+.sample-queue.glass {
+    border-radius: 24px;
+    padding: 2rem;
+}
+
+.font-mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--secondary);
+    font-size: 0.9rem;
+}
+
+.patient-cell strong {
+    display: block;
+    font-size: 1rem;
+    color: var(--text-main);
+}
+
+.status-pill {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.status-pill.collected {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--secondary);
+}
+
+.status-pill.in-progress {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+}
+
+.status-pill.completed {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--primary);
+}
+
+.action-btns button {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid var(--border-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    transition: var(--transition);
+    color: var(--text-muted);
+}
+
+.action-btns button:hover:not(:disabled) {
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.quick-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.action-card {
+    padding: 2rem;
+    border-radius: 24px;
+    transition: all 0.3s ease;
+}
+
+.action-card:hover {
+    transform: translateX(5px);
+    box-shadow: var(--shadow-md);
+}
+
+.action-card.primary {
+    background: var(--primary);
+    color: white;
+}
+
+.action-card .icon {
+    width: 52px;
+    height: 52px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.action-card h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.action-card .arrow {
+    position: absolute;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.6;
+}
