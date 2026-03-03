@@ -165,6 +165,11 @@ export const GlobalProvider = ({ children }) => {
         if (error) console.error("Update patient error:", error);
     };
 
+    const logout = async () => {
+        const { error } = await supabase.auth.signOut();
+        if (error) console.error("Logout error:", error);
+    };
+
     const value = {
         user,
         profile,
@@ -183,7 +188,8 @@ export const GlobalProvider = ({ children }) => {
         addMedicine,
         addLabSample,
         addRental,
-        updatePatient
+        updatePatient,
+        logout
     };
 
     return (

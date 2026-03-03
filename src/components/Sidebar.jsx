@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import {
     BarChart3, Users, FlaskConical, Pill, Stethoscope,
     Settings, ShoppingBag, Truck, LayoutDashboard,
-    ClipboardList, Bell, User, Shield, HeartPulse
+    ClipboardList, Bell, User, Shield, HeartPulse, LogOut
 } from 'lucide-react';
 import { useGlobal } from '../context/GlobalContext';
 import './Sidebar.css';
@@ -47,7 +47,7 @@ const MENU_ITEMS = {
 
 
 const Sidebar = ({ role }) => {
-    const { profile } = useGlobal();
+    const { profile, logout } = useGlobal();
     const items = MENU_ITEMS[role] || [];
 
     return (
@@ -81,6 +81,9 @@ const Sidebar = ({ role }) => {
                         <p className="user-role">{profile?.role || role.toUpperCase()}</p>
                     </div>
                 </div>
+                <button className="logout-btn" onClick={logout} title="Sign Out">
+                    <LogOut size={20} />
+                </button>
             </div>
         </aside>
     );

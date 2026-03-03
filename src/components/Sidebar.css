@@ -13,33 +13,33 @@
     border-right: 1px solid var(--border-main);
 }
 
-.sidebar-logo {
-    padding: 2rem 1.5rem;
+.sidebar-header {
+    padding: 2.5rem 1.5rem;
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.logo-icon {
+.logo-box {
     width: 40px;
     height: 40px;
     background: var(--primary);
-    border-radius: 10px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700;
+    font-weight: 800;
     font-size: 1.5rem;
     color: white;
 }
 
-.sidebar-logo h2 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--text-main);
+.sidebar-header h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
 }
 
-.sidebar-logo span {
+.sidebar-header span {
     color: var(--primary);
 }
 
@@ -48,7 +48,7 @@
     padding: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .nav-link {
@@ -60,6 +60,7 @@
     transition: var(--transition);
     color: var(--text-muted);
     font-weight: 600;
+    text-decoration: none;
 }
 
 .nav-link:hover {
@@ -74,41 +75,72 @@
 }
 
 .sidebar-footer {
-    padding: 1.25rem;
+    padding: 1.5rem;
     border-top: 1px solid var(--border-main);
     background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
 }
 
 .user-profile {
     display: flex;
     align-items: center;
     gap: 12px;
+    min-width: 0;
 }
 
 .avatar {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     background: var(--primary);
     color: white;
-    border-radius: 10px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .user-info {
     display: flex;
     flex-direction: column;
+    min-width: 0;
 }
 
 .user-name {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 700;
     color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .user-role {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
     font-weight: 600;
+}
+
+.logout-btn {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.logout-btn:hover {
+    background: #ef4444;
+    color: white;
+    transform: scale(1.05);
 }
