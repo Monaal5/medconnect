@@ -5,6 +5,7 @@ import {
     Users, Truck, ShieldCheck, ArrowRight
 } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
+import './Login.css';
 
 import logo from '../assets/logo.png';
 
