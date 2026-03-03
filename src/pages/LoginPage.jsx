@@ -4,7 +4,6 @@ import {
     Stethoscope, Pill, FlaskConical,
     Users, Truck, ShieldCheck, ArrowRight
 } from 'lucide-react';
-import './Login.css';
 import { supabase } from '../lib/supabaseClient';
 
 import logo from '../assets/logo.png';
