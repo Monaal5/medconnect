@@ -79,14 +79,11 @@
 }
 
 .brand-logo {
-    width: 72px;
-    height: 72px;
+    width: 110px;
+    height: 110px;
     object-fit: contain;
-    background: white;
-    padding: 10px;
-    border-radius: 20px;
-    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15), 0 2px 8px rgba(0, 0, 0, 0.06);
-    border: 1px solid rgba(16, 185, 129, 0.15);
+    mix-blend-mode: multiply;
+    filter: brightness(1.1) contrast(1.2);
 }
 
 .sidebar-brand h1 {

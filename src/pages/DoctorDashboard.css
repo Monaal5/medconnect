@@ -1,604 +1,290 @@
+/* Professional Clinical Theme for Doctor Dashboard */
 :root {
-    --clinic-primary: #10b981;
-    --clinic-primary-light: #059669;
-    --clinic-bg: #f8fafc;
-    --clinic-surface: rgba(255, 255, 255, 0.8);
-    --clinic-border: rgba(0, 0, 0, 0.1);
-    --clinic-text: #000000;
-    --clinic-text-muted: #4b5563;
-    --glass-blur: blur(16px);
+    --ehr-primary: #0f172a; /* Deep Slate */
+    --ehr-accent: #2563eb; /* High Contrast Blue */
+    --ehr-accent-hover: #1d4ed8;
+    --ehr-bg: #f8fafc;
+    --ehr-surface: #ffffff;
+    --ehr-border: #e2e8f0;
+    --ehr-text-main: #0f172a;
+    --ehr-text-muted: #64748b;
+    --ehr-success: #059669;
+    --ehr-danger: #e11d48;
 }
 
-.dashboard-fade {
-    animation: dashboardEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-    color: var(--clinic-text);
-    min-height: 100vh;
-    padding: 2rem;
-    background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.1), transparent),
-        radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.1), transparent),
-        #f8fafc;
-}
-
-@keyframes dashboardEntrance {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.dashboard-header {
+/* Master Layout */
+.dashboard-layout-professional {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 3rem;
-    border-bottom: 1px solid var(--clinic-border);
-    padding-bottom: 1.5rem;
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--ehr-bg);
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: var(--ehr-text-main);
+    overflow: hidden;
 }
 
-.clinic-title {
-    font-size: 2.5rem;
+/* Sidebar */
+.ehr-sidebar {
+    width: 250px;
+    background-color: var(--ehr-primary);
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 0;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+.ehr-brand {
+    padding: 0 1.5rem 2rem 1.5rem;
+    font-size: 1.25rem;
     font-weight: 800;
     letter-spacing: -0.02em;
-    background: linear-gradient(135deg, #111827 0%, #4b5563 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 0.25rem;
-}
-
-.subtitle {
-    font-size: 1.1rem;
-    color: var(--clinic-text-muted);
-}
-
-.header-actions {
     display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.ehr-brand svg {
+    color: var(--ehr-accent-hover);
+}
+
+.ehr-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+}
+
+.ehr-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 1.5rem;
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+}
+
+.ehr-nav-item:hover {
+    background-color: rgba(255,255,255,0.05);
+    color: #ffffff;
+}
+
+.ehr-nav-item.active {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: #ffffff;
+    border-left-color: var(--ehr-accent);
+}
+
+/* Main Content Area */
+.ehr-main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Top Header Bar */
+.ehr-header {
+    height: 70px;
+    background-color: var(--ehr-surface);
+    border-bottom: 1px solid var(--ehr-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+}
+
+.ehr-header-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.ehr-header-actions {
+    display: flex;
+    align-items: center;
     gap: 1rem;
 }
 
-/* Stats */
-.stats-strip {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin-bottom: 3rem;
+.ehr-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    border: none;
 }
 
-.stat-card.glass {
-    background: var(--clinic-surface);
-    backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--clinic-border);
-    border-radius: 24px;
+.ehr-btn-primary {
+    background-color: var(--ehr-accent);
+    color: white;
+}
+
+.ehr-btn-primary:hover {
+    background-color: var(--ehr-accent-hover);
+}
+
+.ehr-btn-outline {
+    background-color: transparent;
+    border: 1px solid var(--ehr-border);
+    color: var(--ehr-text-main);
+}
+
+.ehr-btn-outline:hover {
+    background-color: #f1f5f9;
+}
+
+/* Content Scroll Area */
+.ehr-scroll-area {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+/* Cards & Data Tables */
+.ehr-card {
+    background-color: var(--ehr-surface);
+    border: 1px solid var(--ehr-border);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     padding: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-    transition: all 0.3s ease;
-}
-
-.stat-card.glass:hover {
-    border-color: var(--clinic-primary);
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.2);
-}
-
-.stat-icon {
-    width: 60px;
-    height: 60px;
-    border-radius: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(16, 185, 129, 0.1);
-    color: var(--clinic-primary);
-}
-
-.stat-value {
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin: 4px 0;
-}
-
-/* Layout */
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 380px 1fr;
-    gap: 2rem;
-}
-
-.patients-list {
-    background: var(--clinic-surface);
-    backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--clinic-border);
-    border-radius: 24px;
-    padding: 1.5rem;
-    height: calc(100vh - 350px);
-    display: flex;
-    flex-direction: column;
-}
-
-.search-mini {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(255, 255, 255, 0.5);
-    border: 1px solid var(--clinic-border);
-    padding: 0.75rem 1rem;
-    border-radius: 14px;
     margin-bottom: 1.5rem;
 }
 
-.search-mini input {
-    background: none;
-    border: none;
-    color: var(--clinic-text);
-    width: 100%;
-    outline: none;
-}
-
-.patient-items {
-    overflow-y: auto;
-    padding-right: 8px;
-}
-
-.patient-row {
+.ehr-card-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    border-radius: 16px;
-    margin-bottom: 0.5rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: 1px solid transparent;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--ehr-border);
+    padding-bottom: 1rem;
 }
 
-.patient-row:hover {
-    background: rgba(0, 0, 0, 0.03);
-}
-
-.patient-row.active {
-    background: rgba(16, 185, 129, 0.1);
-    border-color: var(--clinic-primary);
-}
-
-.p-avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, var(--clinic-primary) 0%, #065f46 100%);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.ehr-card-title {
+    font-size: 1.1rem;
     font-weight: 700;
+    color: var(--ehr-primary);
 }
 
-.patient-summary {
-    background: var(--clinic-surface);
-    backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--clinic-border);
-    border-radius: 24px;
-    padding: 2.5rem;
-    height: 100%;
+/* Patient Data Table */
+.ehr-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
 }
 
-.p-large-avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 24px;
-    background: var(--clinic-primary);
-    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    font-weight: 800;
-    color: white;
+.ehr-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
 }
 
-.health-metrics {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin: 2.5rem 0;
-}
-
-.metric {
-    background: rgba(255, 255, 255, 0.5);
-    border: 1px solid var(--clinic-border);
-    padding: 1.5rem;
-    border-radius: 20px;
-    text-align: center;
-    transition: var(--transition);
-}
-
-.metric strong {
-    font-size: 1.5rem;
-    color: var(--clinic-primary-light);
-    display: block;
-}
-
-.metric span {
+.ehr-table th {
     font-size: 0.8rem;
     text-transform: uppercase;
+    color: var(--ehr-text-muted);
     font-weight: 700;
-    color: var(--clinic-text-muted);
-}
-
-/* AI Assistant */
-.clinical-ai-section {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
-    border: 1px solid rgba(16, 185, 129, 0.2);
-    border-radius: 20px;
-    padding: 1.5rem;
-}
-
-.ai-chat {
-    background: rgba(255, 255, 255, 0.4);
-    border-radius: 12px;
+    letter-spacing: 0.05em;
     padding: 1rem;
-    line-height: 1.6;
-    color: #1e293b;
-    margin-top: 1rem;
+    border-bottom: 2px solid var(--ehr-border);
+    background: #f8fafc;
 }
 
-.ai-input-wrapper {
-    display: flex;
-    gap: 0.75rem;
-    margin-top: 1rem;
+.ehr-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--ehr-border);
+    font-size: 0.95rem;
+    vertical-align: middle;
 }
+
+.ehr-table tr:hover td {
+    background-color: #f1f5f9;
+}
+
+/* Badges */
+.ehr-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.ehr-badge.success { background: #dcfce7; color: #166534; }
+.ehr-badge.warning { background: #fef3c7; color: #92400e; }
+.ehr-badge.info { background: #dbeafe; color: #1e40af; }
 
 /* Modals */
-.clinical-modal {
-    width: 100%;
-    max-width: 550px;
-    padding: 2.5rem;
-    border-radius: 28px;
-    animation: modalSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes modalSlideUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px) scale(0.95);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 2rem;
-}
-
-.modal-subtitle {
-    font-size: 0.95rem;
-    color: var(--clinic-text-muted);
-    font-weight: 500;
-}
-
-.clinical-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.75rem;
-}
-
-.form-section {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.form-section label {
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: var(--clinic-primary);
-}
-
-.form-row {
-    display: flex;
-    gap: 1rem;
-}
-
-.full-width {
-    grid-column: span 2;
-    width: 100%;
-}
-
-/* Clinic Settings */
-.clinic-settings-container {
-    padding: 3rem;
-    max-width: 900px;
-    margin: 0 auto;
-    border-radius: 32px;
-}
-
-.settings-header {
-    margin-bottom: 2.5rem;
-}
-
-.settings-header h2 {
-    font-size: 2rem;
-    font-weight: 800;
-    margin-bottom: 0.5rem;
-}
-
-.settings-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-}
-
-.input-group {
-    display: flex;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.03);
-    border: 1px solid var(--clinic-border);
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.input-prefix {
-    padding: 0 1rem;
-    background: rgba(0, 0, 0, 0.05);
-    color: var(--clinic-text-muted);
-    font-weight: 700;
-}
-
-.form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--clinic-border);
-}
-
-.primary-btn {
-    background: var(--clinic-primary);
-    border-radius: 14px;
-    font-weight: 700;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    color: white;
-    padding: 0.75rem 1.5rem;
-    cursor: pointer;
-    border: none;
-}
-
-.primary-btn:hover {
-    transform: scale(1.02) translateY(-2px);
-    box-shadow: 0 8px 25px -5px rgba(16, 185, 129, 0.4);
-}
-
-/* Patient Full View - Premium Polish */
-.patients-full-view {
-    padding: 1rem 0;
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 3rem;
-}
-
-.section-header h2 {
-    font-size: 2.2rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    color: var(--clinic-text);
-}
-
-.directory-actions {
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-}
-
-.search-large {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: var(--clinic-surface);
-    backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--clinic-border);
-    padding: 0.8rem 1.5rem;
-    border-radius: 18px;
-    width: 450px;
-    transition: all 0.3s ease;
-}
-
-.search-large:focus-within {
-    border-color: var(--clinic-primary);
-    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
-}
-
-.search-large input {
-    background: none;
-    border: none;
-    width: 100%;
-    outline: none;
-    font-size: 1rem;
-    color: var(--clinic-text);
-}
-
-.search-large svg {
-    color: var(--clinic-primary);
-    flex-shrink: 0;
-}
-
-.patients-grid-detailed {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 2rem;
-    padding-bottom: 4rem;
-}
-
-.patient-card-detailed {
-    background: var(--clinic-surface);
-    backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--clinic-border);
-    padding: 2rem;
-    border-radius: 28px;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    color: var(--clinic-text) !important;
-}
-
-.patient-card-detailed * {
-    color: inherit;
-}
-
-.patient-card-detailed:hover {
-    transform: translateY(-10px);
-    border-color: var(--clinic-primary);
-    box-shadow: 0 20px 40px -15px rgba(16, 185, 129, 0.15);
-}
-
-.p-card-header {
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-    margin-bottom: 2rem;
-}
-
-.p-avatar-large {
-    width: 64px;
-    height: 64px;
-    border-radius: 20px;
-    background: linear-gradient(135deg, var(--clinic-primary) 0%, #065f46 100%);
-    color: white !important;
+.ehr-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 23, 42, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
-    font-weight: 800;
+    z-index: 1000;
+    backdrop-filter: blur(2px);
 }
 
-.p-main-info h3 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-bottom: 2px;
+.ehr-form-modal {
+    background: white;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
-.p-id {
-    font-size: 0.85rem;
-    color: var(--clinic-text-muted);
+.ehr-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--ehr-border);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: var(--ehr-text-main);
+}
+.ehr-input:focus {
+    outline: none;
+    border-color: var(--ehr-accent);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
 }
 
-.p-badge {
-    position: absolute;
-    top: 2rem;
-    right: 2rem;
-    background: rgba(16, 185, 129, 0.1);
-    color: var(--clinic-primary) !important;
-    padding: 6px 14px;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 800;
-    border: 1px solid rgba(16, 185, 129, 0.2);
+.ehr-form-group {
+    margin-bottom: 1.25rem;
 }
-
-.p-card-metrics {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    padding: 1.5rem 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    margin-bottom: 1.5rem;
-}
-
-.p-metric-item {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.p-metric-item label {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    font-weight: 700;
-    color: var(--clinic-text-muted);
-    letter-spacing: 0.05em;
-}
-
-.p-metric-item span {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--clinic-primary-light) !important;
-}
-
-.card-footer-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.status-indicator {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+.ehr-form-label {
+    display: block;
     font-size: 0.85rem;
     font-weight: 600;
-    color: #059669;
+    margin-bottom: 0.5rem;
+    color: var(--ehr-text-main);
 }
 
-.pulse-dot {
-    width: 10px;
-    height: 10px;
-    background: #10b981;
-    border-radius: 50%;
-    position: relative;
-}
-
-.pulse-dot::after {
-    content: '';
-    position: absolute;
-    width: 100%;
+/* Split Pane for Generator */
+.prescription-split-pane {
+    display: flex;
+    gap: 2rem;
     height: 100%;
-    background: inherit;
-    border-radius: inherit;
-    animation: pulse 2s infinite;
 }
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-        opacity: 0.8;
-    }
-
-    100% {
-        transform: scale(3);
-        opacity: 0;
-    }
+.split-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
-
-.ghost-btn {
-    background: rgba(0, 0, 0, 0.04);
-    border: 1px solid transparent;
-    padding: 0.6rem 1.2rem;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 0.85rem;
-    color: var(--clinic-text);
-    transition: all 0.2s ease;
-}
-
-.ghost-btn:hover {
-    background: rgba(0, 0, 0, 0.08);
-    transform: translateX(5px);
+.split-right {
+    width: 450px;
+    flex-shrink: 0;
+    background: white;
+    border-left: 1px solid var(--ehr-border);
+    padding: 1.5rem;
+    box-shadow: -4px 0 15px rgba(0,0,0,0.02);
+    display: flex;
+    flex-direction: column;
 }

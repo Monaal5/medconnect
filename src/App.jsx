@@ -10,6 +10,10 @@ import LabDashboard from './pages/LabDashboard';
 import ChemistDashboard from './pages/ChemistDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import Placeholder from './components/Placeholder';
+import LandingPage from './pages/LandingPage';
+import Consultation from './pages/Consultation';
+import Pharmacy from './pages/Pharmacy';
+import LabBookings from './pages/LabBookings';
 
 import { useGlobal } from './context/GlobalContext';
 
@@ -25,22 +29,17 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Entry Point: Login Page */}
+        {/* Entry Point: Landing Page & Generic Public Pages */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/online-doctor-consultation" element={<Consultation />} />
+        <Route path="/medicine" element={<Pharmacy />} />
+        <Route path="/labtest" element={<LabBookings />} />
         <Route path="/login" element={user ? <Navigate to="/doctor" /> : <LoginPage />} />
-        <Route path="/" element={<Navigate to="/login" />} />
 
         {/* Doctor Portal */}
         <Route path="/doctor/*" element={
           <RequireAuth>
-            <Layout role="doctor">
-              <Routes>
-                <Route path="/" element={<DoctorDashboard />} />
-                <Route path="/patients" element={<DoctorDashboard view="patients" />} />
-                <Route path="/profile" element={<DoctorDashboard view="profile" />} />
-                <Route path="/inventory" element={<Inventory />} />
-                <Route path="/labs" element={<LabDashboard />} />
-              </Routes>
-            </Layout>
+            <DoctorDashboard />
           </RequireAuth>
         } />
 
@@ -110,7 +109,7 @@ function App() {
           </RequireAuth>
         } />
 
-        <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );

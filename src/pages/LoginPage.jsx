@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
     Stethoscope, Pill, FlaskConical,
     Users, Truck, ShieldCheck, ArrowRight
@@ -27,6 +27,17 @@ const LoginPage = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const location = useLocation();
+
+    React.useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const roleParam = queryParams.get('role');
+        if (roleParam && ROLES.find(r => r.id === roleParam)) {
+            setSelectedRole(roleParam);
+            // Scroll down a bit to show the form if arrived via explicit link
+            window.scrollTo({ top: 300, behavior: 'smooth' });
+        }
+    }, [location]);
 
     const handleAuth = async (e) => {
         e.preventDefault();

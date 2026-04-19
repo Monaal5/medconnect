@@ -1,0 +1,161 @@
+/* Consultation.css */
+.consultation-page {
+  font-family: 'Inter', sans-serif;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.consult-hero {
+  background: var(--mb-blue);
+  color: white;
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.consult-hero h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.consult-hero p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.consult-search {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  background: white;
+  border-radius: 12px;
+  padding: 0.5rem;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.consult-search input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 1rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  color: var(--mb-dark);
+}
+
+.consult-search button {
+  background: var(--mb-gold);
+  color: black;
+  border: none;
+  padding: 0 2rem;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.specialties-section {
+  padding: 4rem 0;
+  background: white;
+}
+
+.specialties-section h2 {
+  text-align: center;
+  font-size: 2rem;
+  color: var(--mb-dark-blue);
+  margin-bottom: 3rem;
+}
+
+.specialties-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.specialty-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  color: var(--mb-dark);
+  transition: transform 0.2s;
+}
+
+.specialty-card:hover {
+  transform: translateY(-5px);
+}
+
+.specialty-icon {
+  width: 100px;
+  height: 100px;
+  background: var(--mb-light-blue);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 102, 220, 0.1);
+}
+
+.specialty-card h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.specialty-card p {
+  margin: 0;
+  color: var(--mb-blue);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.how-it-works {
+  padding: 4rem 0;
+  background: var(--mb-bg);
+  text-align: center;
+}
+
+.how-it-works h2 {
+  font-size: 2rem;
+  color: var(--mb-dark-blue);
+  margin-bottom: 3rem;
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.step-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--mb-border);
+}
+
+.step-number {
+  background: var(--mb-gold);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin: 0 auto 1.5rem auto;
+}
+
+.step-card h3 {
+  color: var(--mb-dark);
+  margin-bottom: 1rem;
+}
+
+.step-card p {
+  color: var(--mb-light-text);
+  line-height: 1.5;
+}

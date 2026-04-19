@@ -1,6 +1,7 @@
 .app-container {
     display: flex;
-    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
 }
 
 .main-content {
@@ -8,6 +9,8 @@
     margin-left: 260px;
     display: flex;
     flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
 }
 
 .main-header {
@@ -91,5 +94,9 @@
 }
 
 .content-area {
-    padding: 2rem;
+    padding: 1.5rem 2rem;
     flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}

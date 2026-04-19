@@ -11,6 +11,7 @@ import './Sidebar.css';
 const MENU_ITEMS = {
     doctor: [
         { name: 'Dashboard', path: '/doctor', icon: LayoutDashboard },
+        { name: 'Analytics', path: '/doctor/analytics', icon: BarChart3 },
         { name: 'Patients List', path: '/doctor/patients', icon: Users },
         { name: 'Clinic Stock', path: '/doctor/inventory', icon: Pill },
         { name: 'Doctor Info', path: '/doctor/profile', icon: User },

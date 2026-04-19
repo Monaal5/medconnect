@@ -2,32 +2,23 @@ import React, { useState, useEffect } from 'react';
 import {
     Users, Calendar, Activity, Clock,
     Search, Plus, Filter, ChevronRight,
-    TrendingUp, TrendingDown, X, Package,
-    Settings, LayoutDashboard
+    Package, Settings, AlertCircle, FileText,
+    LogOut
 } from 'lucide-react';
 import { useGlobal } from '../context/GlobalContext';
 import PrescriptionGenerator from '../components/PrescriptionGenerator';
-import { getGeminiResponse } from '../lib/geminiClient';
 import './DoctorDashboard.css';
 
 const DoctorDashboard = ({ view: initialView }) => {
-    const { patients, medicines, prescriptions, loading, addPatient, addMedicine, profile, updateProfile } = useGlobal();
+    const { patients, medicines, loading, addPatient, addMedicine, profile, updateProfile, logout } = useGlobal();
     const [selectedPatient, setSelectedPatient] = useState(null);
-    const [showGenerator, setShowGenerator] = useState(false);
     const [showPatientModal, setShowPatientModal] = useState(false);
     const [showStockModal, setShowStockModal] = useState(false);
-    const [aiQuery, setAiQuery] = useState('');
-    const [aiResponse, setAiResponse] = useState('');
-    const [aiLoading, setAiLoading] = useState(false);
+    
+    const [view, setView] = useState(initialView || 'patients');
 
     const [newPatient, setNewPatient] = useState({ name: '', age: '', gender: '', blood_type: '', weight: '', bp: '', glucose: '' });
     const [newMed, setNewMed] = useState({ name: '', category: '', stock: '', price: '' });
-
-    const [view, setView] = useState(initialView || 'overview');
-
-    useEffect(() => {
-        if (initialView) setView(initialView);
-    }, [initialView]);
     const [clinicForm, setClinicForm] = useState({
         full_name: profile?.full_name || '',
         clinic_name: profile?.clinic_name || '',
@@ -35,6 +26,10 @@ const DoctorDashboard = ({ view: initialView }) => {
         clinic_address: profile?.clinic_address || '',
         clinic_logo: profile?.clinic_logo || ''
     });
+
+    useEffect(() => {
+        if (initialView) setView(initialView);
+    }, [initialView]);
 
     useEffect(() => {
         if (profile) {
@@ -51,18 +46,16 @@ const DoctorDashboard = ({ view: initialView }) => {
     const handleUpdateClinic = async (e) => {
         e.preventDefault();
         await updateProfile(clinicForm);
-        setView('overview');
+        setView('patients');
     };
-
-    useEffect(() => {
-        if (patients.length > 0 && !selectedPatient) {
-            setSelectedPatient(patients[0]);
-        }
-    }, [patients]);
 
     const handleAddPatient = async (e) => {
         e.preventDefault();
-        await addPatient(newPatient);
+        const added = await addPatient(newPatient);
+        if (added) {
+            setSelectedPatient(added);
+            setView('prescribe');
+        }
         setShowPatientModal(false);
         setNewPatient({ name: '', age: '', gender: '', blood_type: '', weight: '', bp: '', glucose: '' });
     };
@@ -74,353 +67,298 @@ const DoctorDashboard = ({ view: initialView }) => {
         setNewMed({ name: '', category: '', stock: '', price: '' });
     };
 
-    const askAI = async () => {
-        if (!aiQuery) return;
-        setAiLoading(true);
-        const response = await getGeminiResponse(aiQuery);
-        setAiResponse(response);
-        setAiLoading(false);
-    };
+    if (loading) return <div style={{padding: '3rem', textAlign: 'center', fontFamily: 'Inter'}}>Loading EHR System...</div>;
 
-    if (loading) return <div className="loading">Loading Clinic Data...</div>;
-
-    // Filter prescriptions for selected patient
-    const patientHistory = prescriptions
-        .filter(p => p.patient_id === selectedPatient?.id)
-        .sort((a, b) => new Date(b.date) - new Date(a.date));
-
-    // Filter low stock medicines
-    const lowStockCount = medicines.filter(m => m.stock < 20).length;
+    const lowStockMeds = medicines.filter(m => m.stock < 20);
 
     return (
-        <div className="dashboard-fade">
-            <header className="dashboard-header">
-                <div>
-                    <h1 className="clinic-title">{profile?.clinic_name || "MedConnect Clinic"}</h1>
-                    <p className="subtitle">
-                        Dr. {profile?.full_name || "Smith"} • {profile?.degree || "MBBS, MD"}
-                    </p>
+        <div className="dashboard-layout-professional">
+            
+            {/* Sidebar Navigation */}
+            <aside className="ehr-sidebar">
+                <div className="ehr-brand">
+                    <Activity size={24} />
+                    <span>MedConnect+ EHR</span>
                 </div>
-                <div className="header-actions">
-                    <button className={`secondary-btn glass ${view === 'profile' ? 'active' : ''}`} onClick={() => setView(view === 'overview' ? 'profile' : 'overview')}>
-                        {view === 'overview' ? <Settings size={18} /> : <LayoutDashboard size={18} />}
-                        <span>{view === 'overview' ? 'Clinic Settings' : 'Back to Dashboard'}</span>
-                    </button>
-                    {view === 'overview' && (
-                        <>
-                            <button className="secondary-btn glass" onClick={() => setShowStockModal(true)}>
-                                <Package size={18} />
-                                <span>Inventory</span>
-                            </button>
-                            <button className="secondary-btn glass" onClick={() => setShowPatientModal(true)}>
-                                <Users size={18} />
-                                <span>New Patient</span>
-                            </button>
-                            <button className="primary-btn pulse-btn" onClick={() => setShowGenerator(true)}>
-                                <Activity size={18} />
-                                <span>Prescribe</span>
-                            </button>
-                        </>
-                    )}
+                
+                <div className="ehr-nav">
+                    <div className={`ehr-nav-item ${view === 'patients' ? 'active' : ''}`} onClick={() => setView('patients')}>
+                        <Users size={18} /> Patient Directory
+                    </div>
+                    <div className={`ehr-nav-item ${(view === 'prescribe' || view === 'overview') ? 'active' : ''}`} onClick={() => {
+                        if (patients.length > 0) {
+                            setSelectedPatient(patients[0]);
+                            setView('prescribe');
+                        }
+                    }}>
+                        <FileText size={18} /> Clinical Orders
+                    </div>
+                    <div className={`ehr-nav-item ${view === 'inventory' ? 'active' : ''}`} onClick={() => setView('inventory')}>
+                        <Package size={18} /> Pharmacy Stock
+                        {lowStockMeds.length > 0 && (
+                            <span className="ehr-badge warning" style={{marginLeft: 'auto'}}>{lowStockMeds.length}</span>
+                        )}
+                    </div>
+                    <div className={`ehr-nav-item ${view === 'settings' ? 'active' : ''}`} onClick={() => setView('settings')}>
+                        <Settings size={18} /> Clinic Settings
+                    </div>
                 </div>
-            </header>
 
-            {view === 'overview' ? (
-                <>
-                    <section className="stats-strip">
-                        <div className="stat-card glass">
-                            <div className="stat-icon"><Users size={24} /></div>
-                            <div className="stat-content">
-                                <span className="stat-title">Patient Load</span>
-                                <h3 className="stat-value">{patients.length}</h3>
-                                <span className="stat-trend plus">Optimal capacity</span>
-                            </div>
-                        </div>
-                        <div className="stat-card glass">
-                            <div className="stat-icon"><Activity size={24} /></div>
-                            <div className="stat-content">
-                                <span className="stat-title">Daily Consults</span>
-                                <h3 className="stat-value">24</h3>
-                                <span className="stat-trend plus">8 Pending</span>
-                            </div>
-                        </div>
-                        <div className="stat-card glass">
-                            <div className="stat-icon"><TrendingUp size={24} /></div>
-                            <div className="stat-content">
-                                <span className="stat-title">Critical Alerts</span>
-                                <h3 className="stat-value">{lowStockCount}</h3>
-                                <span className="stat-trend minus">Pharmacy attention</span>
-                            </div>
-                        </div>
-                    </section>
+                <div style={{ marginTop: 'auto', padding: '0 1rem' }}>
+                    <div className="ehr-nav-item" onClick={logout} style={{color: '#f87171'}}>
+                        <LogOut size={18} /> Sign Out Safely
+                    </div>
+                </div>
+            </aside>
 
-                    <div className="dashboard-grid">
-                        <section className="patients-list glass">
-                            <div className="card-header">
-                                <h2>Patient Directory</h2>
-                                <div className="search-mini">
-                                    <Search size={16} />
-                                    <input type="text" placeholder="Search by name or ID..." />
+            {/* Main Content Area */}
+            <main className="ehr-main-content">
+                
+                {/* Header Bar */}
+                <header className="ehr-header">
+                    <div className="ehr-header-title">
+                        {view === 'patients' && 'Patient Directory'}
+                        {(view === 'prescribe' || view === 'overview') && (selectedPatient ? `Clinical Order: ${selectedPatient.name}` : 'Clinical Orders')}
+                        {view === 'inventory' && 'Inventory Management'}
+                        {view === 'settings' && 'Clinic Configuration'}
+                    </div>
+                    <div className="ehr-header-actions">
+                        <span style={{fontSize: '0.85rem', color: '#64748b', fontWeight: '600'}}>
+                            Dr. {profile?.full_name || "Smith"} | {profile?.clinic_name || "Primary Care"}
+                        </span>
+                        {(view === 'patients' || view === 'overview' || view === 'prescribe') && (
+                            <button className="ehr-btn ehr-btn-primary" onClick={() => setShowPatientModal(true)}>
+                                <Plus size={16} /> New Patient
+                            </button>
+                        )}
+                        {view === 'inventory' && (
+                            <button className="ehr-btn ehr-btn-primary" onClick={() => setShowStockModal(true)}>
+                                <Plus size={16} /> Add Stock
+                            </button>
+                        )}
+                    </div>
+                </header>
+
+                {/* scrollable work area */}
+                <div className="ehr-scroll-area">
+                    
+                    {view === 'patients' && (
+                        <div className="ehr-card">
+                            <div className="ehr-card-header">
+                                <h3 className="ehr-card-title">Registered Patients</h3>
+                                <div style={{position: 'relative'}}>
+                                    <Search size={16} style={{position: 'absolute', left: '10px', top: '10px', color: '#888'}}/>
+                                    <input type="text" placeholder="Search EHR id, name..." className="ehr-input" style={{paddingLeft: '2rem', width: '250px'}} />
                                 </div>
                             </div>
-                            <div className="patient-items">
-                                {patients.map((p) => (
-                                    <div
-                                        key={p.id}
-                                        className={`patient-row ${selectedPatient?.id === p.id ? 'active' : ''}`}
-                                        onClick={() => setSelectedPatient(p)}
-                                    >
-                                        <div className="p-avatar">{p.name?.charAt(0)}</div>
-                                        <div className="p-info">
-                                            <h4>{p.name}</h4>
-                                            <p>{p.gender}, {p.age}y • {p.blood_type}</p>
-                                        </div>
-                                        <ChevronRight size={16} className="arrow" />
-                                    </div>
-                                ))}
-                            </div>
-                        </section>
-
-                        <section className="main-work-area">
-                            {showGenerator ? (
-                                <div className="generator-wrapper glass-card">
-                                    <div className="work-header">
-                                        <button className="back-link" onClick={() => setShowGenerator(false)}>← Dashboard Overview</button>
-                                        <h2>Clinical Order: {selectedPatient?.name}</h2>
-                                    </div>
-                                    <PrescriptionGenerator patient={selectedPatient} />
-                                </div>
-                            ) : (
-                                <div className="patient-summary glass">
-                                    <div className="summary-header">
-                                        <div className="p-large-avatar">{selectedPatient?.name?.charAt(0)}</div>
-                                        <div className="p-heading">
-                                            <h2>{selectedPatient?.name}</h2>
-                                            <p className="p-id-tag">PATIENT ID: {selectedPatient?.id} • SECURE LOGS</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="health-metrics">
-                                        <div className="metric">
-                                            <span>Weight</span>
-                                            <strong>{selectedPatient?.weight || '72'} kg</strong>
-                                        </div>
-                                        <div className="metric">
-                                            <span>Vitals (BP)</span>
-                                            <strong>{selectedPatient?.bp || '120/80'}</strong>
-                                        </div>
-                                        <div className="metric">
-                                            <span>Glucose</span>
-                                            <strong>{selectedPatient?.glucose || '95'} mg/dL</strong>
-                                        </div>
-                                    </div>
-
-                                    <div className="clinical-ai-section">
-                                        <h3 className="ai-title">
-                                            <Activity size={18} className="pulse-icon" />
-                                            Clinical Insight Engine
-                                        </h3>
-                                        <div className="ai-chat">
-                                            {aiResponse || "Clinical Assistant ready. Ingest symptoms for diagnosis support or drug interaction checks."}
-                                        </div>
-                                        <div className="ai-input-wrapper">
-                                            <input
-                                                type="text"
-                                                placeholder="Enter clinical query..."
-                                                value={aiQuery}
-                                                onChange={(e) => setAiQuery(e.target.value)}
-                                            />
-                                            <button onClick={askAI} disabled={aiLoading} className="primary-btn">
-                                                {aiLoading ? 'Analyzing...' : 'Execute'}
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div className="recent-activity" style={{ marginTop: '2.5rem' }}>
-                                        <h3 className="section-title">Clinical History</h3>
-                                        {patientHistory.length > 0 ? (
-                                            patientHistory.map((item, idx) => (
-                                                <div key={idx} className="activity-item">
-                                                    <div className="act-dot"></div>
-                                                    <div className="act-content">
-                                                        <p className="act-date">{item.date}</p>
-                                                        <p className="act-title">Prescription • {item.doctor}</p>
-                                                        <p className="act-desc">
-                                                            {item.medicines?.map(m => `${m.name} (${m.dose})`).join(', ')}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            ))
-                                        ) : (
-                                            <p className="empty-msg">No clinical data on record.</p>
+                            <div className="ehr-table-wrapper">
+                                <table className="ehr-table">
+                                    <thead>
+                                        <tr>
+                                            <th>EHR ID</th>
+                                            <th>Patient Name</th>
+                                            <th>Age / Sex</th>
+                                            <th>Blood Type</th>
+                                            <th>Last BP</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {patients.map(p => (
+                                            <tr key={p.id}>
+                                                <td style={{fontFamily: 'monospace', color: '#64748b'}}>{p.id.substring(0,8).toUpperCase()}</td>
+                                                <td style={{fontWeight: '600'}}>{p.name}</td>
+                                                <td>{p.age}y / {p.gender?.charAt(0) || 'U'}</td>
+                                                <td><span className="ehr-badge info">{p.blood_type || 'N/A'}</span></td>
+                                                <td>{p.bp || '120/80'}</td>
+                                                <td>
+                                                    <button className="ehr-btn ehr-btn-outline" style={{padding: '0.4rem 0.8rem', fontSize: '0.8rem'}} onClick={() => {
+                                                        setSelectedPatient(p);
+                                                        setView('prescribe');
+                                                    }}>
+                                                        Prescribe <ChevronRight size={14}/>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                        {patients.length === 0 && (
+                                            <tr>
+                                                <td colSpan="6" style={{textAlign: 'center', padding: '3rem', color: '#888'}}>
+                                                    No patients registered in the directory.
+                                                </td>
+                                            </tr>
                                         )}
-                                    </div>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
 
-                                    <button className="primary-btn full-width" onClick={() => setShowGenerator(true)} style={{ marginTop: '2rem', padding: '1.25rem' }}>
-                                        Initiate New Clinical Order
+                    {(view === 'prescribe' || view === 'overview') && (
+                        <div style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
+                            {selectedPatient ? (
+                                <PrescriptionGenerator patient={selectedPatient} />
+                            ) : (
+                                <div style={{textAlign: 'center', margin: '4rem 0'}}>
+                                    <Users size={48} color="#cbd5e1" style={{marginBottom: '1rem'}} />
+                                    <h3>No Patient Selected</h3>
+                                    <p>Please select a patient from the directory to start a clinical order.</p>
+                                    <br/>
+                                    <button className="ehr-btn ehr-btn-primary" onClick={() => setView('patients')} style={{margin: '0 auto'}}>
+                                        Open Directory
                                     </button>
                                 </div>
                             )}
-                        </section>
-                    </div>
-                </>
-            ) : view === 'patients' ? (
-                <div className="patients-full-view dashboard-fade">
-                    <div className="section-header">
-                        <h2>Patient Directory</h2>
-                        <div className="directory-actions">
-                            <div className="search-large">
-                                <Search size={22} />
-                                <input type="text" placeholder="Search by name, ID, blood type or symptoms..." />
-                            </div>
-                            <button className="primary-btn pulse-btn" onClick={() => setShowPatientModal(true)}>
-                                <Plus size={18} />
-                                <span>Register New Patient</span>
-                            </button>
                         </div>
-                    </div>
-                    <div className="patients-grid-detailed">
-                        {patients.map(p => (
-                            <div key={p.id} className="patient-card-detailed glass" onClick={() => { setSelectedPatient(p); setView('overview'); }}>
-                                <div className="p-badge">{p.blood_type || 'O+'}</div>
-                                <div className="p-card-header">
-                                    <div className="p-avatar-large">{p.name?.charAt(0)}</div>
-                                    <div className="p-main-info">
-                                        <h3>{p.name}</h3>
-                                        <p className="p-id">{p.id}</p>
-                                    </div>
-                                </div>
-                                <div className="p-card-metrics">
-                                    <div className="p-metric-item">
-                                        <label>Age</label>
-                                        <span>{p.age}y</span>
-                                    </div>
-                                    <div className="p-metric-item">
-                                        <label>BP</label>
-                                        <span>{p.bp || '120/80'}</span>
-                                    </div>
-                                    <div className="p-metric-item">
-                                        <label>Weight</label>
-                                        <span>{p.weight || '70'}kg</span>
-                                    </div>
-                                </div>
-                                <div className="card-footer-actions">
-                                    <div className="status-indicator">
-                                        <div className="pulse-dot"></div>
-                                        <span>Active File</span>
-                                    </div>
-                                    <button className="ghost-btn">
-                                        View History →
-                                    </button>
+                    )}
+
+                    {view === 'inventory' && (
+                        <div className="ehr-card">
+                            <div className="ehr-card-header">
+                                <h3 className="ehr-card-title">Pharmacy Stock Levels</h3>
+                            </div>
+                            <div className="ehr-table-wrapper">
+                                <table className="ehr-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Medicine Name</th>
+                                            <th>Category</th>
+                                            <th>In Stock (Units)</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {medicines.map(m => (
+                                            <tr key={m.id}>
+                                                <td style={{fontWeight: '600'}}>{m.name}</td>
+                                                <td>{m.category || 'General'}</td>
+                                                <td>
+                                                    <span className={`ehr-badge ${m.stock < 20 ? 'danger' : 'success'}`}>
+                                                        {m.stock} Units {m.stock < 20 && '(Low)'}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <button className="ehr-btn ehr-btn-outline" style={{padding: '0.4rem 0.8rem', fontSize: '0.8rem'}}>
+                                                        Order Refill
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
+
+                    {view === 'settings' && (
+                        <div className="ehr-card" style={{maxWidth: '800px'}}>
+                            <div className="ehr-card-header">
+                                <div>
+                                    <h3 className="ehr-card-title">Professional Identity & Clinic Setup</h3>
+                                    <p style={{fontSize: '0.85rem', color: '#64748b', marginTop: '0.2rem'}}>This information appears on generated PDF prescriptions.</p>
                                 </div>
                             </div>
-                        ))}
-                    </div>
+                            <form onSubmit={handleUpdateClinic} style={{padding: '1rem 0'}}>
+                                <div className="ehr-form-group">
+                                    <label className="ehr-form-label">Doctor Full Name</label>
+                                    <input className="ehr-input" placeholder="e.g. John Doe" value={clinicForm.full_name} onChange={e => setClinicForm({...clinicForm, full_name: e.target.value})} />
+                                </div>
+                                <div className="ehr-form-group">
+                                    <label className="ehr-form-label">Medical Degree & Reg No.</label>
+                                    <input className="ehr-input" placeholder="e.g. MBBS, MD | MCI Registration No. 123456" value={clinicForm.degree} onChange={e => setClinicForm({...clinicForm, degree: e.target.value})} />
+                                </div>
+                                <div className="ehr-form-group">
+                                    <label className="ehr-form-label">Clinic / Hospital Name</label>
+                                    <input className="ehr-input" placeholder="e.g. City Care Multispeciality" value={clinicForm.clinic_name} onChange={e => setClinicForm({...clinicForm, clinic_name: e.target.value})} />
+                                </div>
+                                <div className="ehr-form-group">
+                                    <label className="ehr-form-label">Clinic Address & Contact</label>
+                                    <textarea className="ehr-input" rows="3" placeholder="Full address and phone number for letterhead" value={clinicForm.clinic_address} onChange={e => setClinicForm({...clinicForm, clinic_address: e.target.value})}></textarea>
+                                </div>
+                                <button type="submit" className="ehr-btn ehr-btn-primary" style={{marginTop: '1rem'}}>Save Configuration</button>
+                            </form>
+                        </div>
+                    )}
+
                 </div>
-            ) : (
-                <div className="clinic-settings-container glass dashboard-fade">
-                    <div className="settings-header">
-                        <h2>Clinic & Professional Registration</h2>
-                        <p>This information will appear on all digital prescriptions and patient reports.</p>
-                    </div>
-                    <form onSubmit={handleUpdateClinic} className="clinical-form">
-                        <div className="settings-grid">
-                            <div className="form-section">
-                                <label>Professional Identity</label>
-                                <div className="input-group">
-                                    <span className="input-prefix">Dr.</span>
-                                    <input className="form-input" placeholder="Full Name (e.g. John Doe)" value={clinicForm.full_name} onChange={e => setClinicForm({ ...clinicForm, full_name: e.target.value })} />
-                                </div>
-                                <input className="form-input" placeholder="Medical Degree (e.g. MBBS, MD, Cardiology)" value={clinicForm.degree} onChange={e => setClinicForm({ ...clinicForm, degree: e.target.value })} />
-                            </div>
-                            <div className="form-section">
-                                <label>Clinic Branding</label>
-                                <input className="form-input" placeholder="Clinic / Hospital Name" value={clinicForm.clinic_name} onChange={e => setClinicForm({ ...clinicForm, clinic_name: e.target.value })} />
-                                <input className="form-input" placeholder="Clinic Logo URL (Optional)" value={clinicForm.clinic_logo} onChange={e => setClinicForm({ ...clinicForm, clinic_logo: e.target.value })} />
-                            </div>
-                            <div className="form-section full-width">
-                                <label>Clinic Location & Contact</label>
-                                <textarea className="form-input" placeholder="Full Address, Contact No." rows="3" value={clinicForm.clinic_address} onChange={e => setClinicForm({ ...clinicForm, clinic_address: e.target.value })} />
-                            </div>
-                        </div>
-                        <div className="form-actions">
-                            <button type="button" className="secondary-btn" onClick={() => setView('overview')}>Cancel</button>
-                            <button type="submit" className="primary-btn">Save Clinical Profile</button>
-                        </div>
-                    </form>
-                </div>
-            )}
+            </main>
 
             {/* Modals */}
             {showPatientModal && (
-                <div className="modal-overlay">
-                    <div className="clinical-modal glass">
-                        <div className="modal-header">
-                            <div>
-                                <h2>Register New Patient</h2>
-                                <p className="modal-subtitle">Add to clinical directory</p>
-                            </div>
-                            <button className="close-btn" onClick={() => setShowPatientModal(false)}><X /></button>
+                <div className="ehr-modal-overlay" onClick={() => setShowPatientModal(false)}>
+                    <div className="ehr-form-modal" onClick={e => e.stopPropagation()}>
+                        <div className="ehr-card-header" style={{border: 'none', padding: 0}}>
+                            <h3 className="ehr-card-title">Register New Patient</h3>
                         </div>
-                        <form onSubmit={handleAddPatient} className="clinical-form">
-                            <div className="form-section">
-                                <label>Personal Information</label>
-                                <input className="form-input" placeholder="Patient Full Name" required value={newPatient.name} onChange={e => setNewPatient({ ...newPatient, name: e.target.value })} />
-                                <div className="form-row">
-                                    <input className="form-input" placeholder="Age" type="number" required value={newPatient.age} onChange={e => setNewPatient({ ...newPatient, age: e.target.value })} />
-                                    <select className="form-input" required value={newPatient.gender} onChange={e => setNewPatient({ ...newPatient, gender: e.target.value })}>
-                                        <option value="">Gender</option>
+                        <form onSubmit={handleAddPatient} style={{marginTop: '1.5rem'}}>
+                            <div className="ehr-form-group">
+                                <label className="ehr-form-label">Full Name</label>
+                                <input required className="ehr-input" value={newPatient.name} onChange={e => setNewPatient({...newPatient, name: e.target.value})} />
+                            </div>
+                            <div style={{display: 'flex', gap: '1rem'}}>
+                                <div className="ehr-form-group" style={{flex: 1}}>
+                                    <label className="ehr-form-label">Age</label>
+                                    <input required type="number" className="ehr-input" value={newPatient.age} onChange={e => setNewPatient({...newPatient, age: e.target.value})} />
+                                </div>
+                                <div className="ehr-form-group" style={{flex: 1}}>
+                                    <label className="ehr-form-label">Gender</label>
+                                    <select required className="ehr-input" value={newPatient.gender} onChange={e => setNewPatient({...newPatient, gender: e.target.value})}>
+                                        <option value="">Select...</option>
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>
                                         <option value="Other">Other</option>
                                     </select>
                                 </div>
                             </div>
-                            <div className="form-section">
-                                <label>Vital Metrics</label>
-                                <div className="form-row">
-                                    <input className="form-input" placeholder="Blood Type" value={newPatient.blood_type} onChange={e => setNewPatient({ ...newPatient, blood_type: e.target.value })} />
-                                    <input className="form-input" placeholder="Weight (kg)" type="number" value={newPatient.weight} onChange={e => setNewPatient({ ...newPatient, weight: e.target.value })} />
+                            <div style={{display: 'flex', gap: '1rem'}}>
+                                <div className="ehr-form-group" style={{flex: 1}}>
+                                    <label className="ehr-form-label">Blood Type (Optional)</label>
+                                    <input className="ehr-input" value={newPatient.blood_type} onChange={e => setNewPatient({...newPatient, blood_type: e.target.value})} />
                                 </div>
-                                <div className="form-row">
-                                    <input className="form-input" placeholder="BP (e.g. 120/80)" value={newPatient.bp} onChange={e => setNewPatient({ ...newPatient, bp: e.target.value })} />
-                                    <input className="form-input" placeholder="Glucose (mg/dL)" type="number" value={newPatient.glucose} onChange={e => setNewPatient({ ...newPatient, glucose: e.target.value })} />
+                                <div className="ehr-form-group" style={{flex: 1}}>
+                                    <label className="ehr-form-label">Vitals (BP)</label>
+                                    <input className="ehr-input" placeholder="120/80" value={newPatient.bp} onChange={e => setNewPatient({...newPatient, bp: e.target.value})} />
                                 </div>
                             </div>
-                            <button type="submit" className="primary-btn full-width">Add Patient to Directory</button>
+                            <div style={{display: 'flex', gap: '1rem', marginTop: '1rem'}}>
+                                <button type="button" className="ehr-btn ehr-btn-outline" style={{flex: 1, justifyContent: 'center'}} onClick={() => setShowPatientModal(false)}>Cancel</button>
+                                <button type="submit" className="ehr-btn ehr-btn-primary" style={{flex: 2, justifyContent: 'center'}}>Register & Prescribe</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+            
+            {showStockModal && (
+                <div className="ehr-modal-overlay" onClick={() => setShowStockModal(false)}>
+                    <div className="ehr-form-modal" onClick={e => e.stopPropagation()}>
+                        <div className="ehr-card-header" style={{border: 'none', padding: 0}}>
+                            <h3 className="ehr-card-title">Add Inventory Stock</h3>
+                        </div>
+                        <form onSubmit={handleAddMed} style={{marginTop: '1.5rem'}}>
+                            <div className="ehr-form-group">
+                                <label className="ehr-form-label">Medicine Name</label>
+                                <input required className="ehr-input" value={newMed.name} onChange={e => setNewMed({...newMed, name: e.target.value})} />
+                            </div>
+                            <div className="ehr-form-group">
+                                <label className="ehr-form-label">Category</label>
+                                <input required placeholder="e.g. Antibiotic" className="ehr-input" value={newMed.category} onChange={e => setNewMed({...newMed, category: e.target.value})} />
+                            </div>
+                            <div style={{display: 'flex', gap: '1rem'}}>
+                                <div className="ehr-form-group" style={{flex: 1}}>
+                                    <label className="ehr-form-label">Stock Count</label>
+                                    <input required type="number" className="ehr-input" value={newMed.stock} onChange={e => setNewMed({...newMed, stock: e.target.value})} />
+                                </div>
+                            </div>
+                            <div style={{display: 'flex', gap: '1rem', marginTop: '1rem'}}>
+                                <button type="button" className="ehr-btn ehr-btn-outline" style={{flex: 1, justifyContent: 'center'}} onClick={() => setShowStockModal(false)}>Cancel</button>
+                                <button type="submit" className="ehr-btn ehr-btn-primary" style={{flex: 2, justifyContent: 'center'}}>Add Stock</button>
+                            </div>
                         </form>
                     </div>
                 </div>
             )}
 
-            {showStockModal && (
-                <div className="modal-overlay">
-                    <div className="clinical-modal glass">
-                        <div className="modal-header">
-                            <div>
-                                <h2>Inventory Management</h2>
-                                <p className="modal-subtitle">Update clinic pharmacy stock</p>
-                            </div>
-                            <button className="close-btn" onClick={() => setShowStockModal(false)}><X /></button>
-                        </div>
-                        <form onSubmit={handleAddMed} className="clinical-form">
-                            <div className="form-section">
-                                <label>Medicine Details</label>
-                                <input className="form-input" placeholder="Medicine Name" required value={newMed.name} onChange={e => setNewMed({ ...newMed, name: e.target.value })} />
-                                <input className="form-input" placeholder="Category (e.g. Antibiotic, Painkiller)" required value={newMed.category} onChange={e => setNewMed({ ...newMed, category: e.target.value })} />
-                            </div>
-                            <div className="form-section">
-                                <label>Stock & Pricing</label>
-                                <div className="form-row">
-                                    <input className="form-input" placeholder="Initial Stock" type="number" required value={newMed.stock} onChange={e => setNewMed({ ...newMed, stock: e.target.value })} />
-                                    <input className="form-input" placeholder="Price per Unit ($)" type="number" step="0.01" required value={newMed.price} onChange={e => setNewMed({ ...newMed, price: e.target.value })} />
-                                </div>
-                            </div>
-                            <button type="submit" className="primary-btn full-width">Sync with Inventory</button>
-                        </form>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };

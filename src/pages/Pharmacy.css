@@ -1,0 +1,150 @@
+/* Pharmacy.css */
+.pharmacy-page {
+  font-family: 'Inter', sans-serif;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.pharmacy-hero {
+  background: linear-gradient(135deg, var(--mb-blue) 0%, #004ba3 100%);
+  color: white;
+  padding: 3rem 0;
+}
+
+.pharmacy-banner-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.pharmacy-text h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.pharmacy-text p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  color: #e6f0fa;
+}
+
+.upload-rx-box {
+  background: white;
+  color: var(--mb-dark);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  max-width: 450px;
+}
+
+.upload-rx-box button {
+  background: var(--mb-gold);
+  color: black;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.med-search {
+  max-width: 800px;
+  margin: -2rem auto 3rem auto;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  background: white;
+  border-radius: 12px;
+  padding: 0.5rem;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  border: 1px solid var(--mb-border);
+}
+
+.med-search input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 1rem;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  color: var(--mb-dark);
+}
+
+.med-search button {
+  background: var(--mb-blue);
+  color: white;
+  border: none;
+  padding: 0 2rem;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.med-categories {
+  padding: 2rem 0 4rem 0;
+  background: white;
+}
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.category-header h2 {
+  font-size: 1.8rem;
+  color: var(--mb-dark-blue);
+}
+
+.med-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.med-card {
+  border: 1px solid var(--mb-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: box-shadow 0.2s, transform 0.2s;
+  background: white;
+  text-decoration: none;
+  color: var(--mb-dark);
+}
+
+.med-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  border-color: var(--mb-blue);
+}
+
+.med-image-placeholder {
+  width: 100px;
+  height: 100px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin: 0 auto 1rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.med-card h4 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.med-card .discount {
+  color: #10b981;
+  font-weight: bold;
+  font-size: 0.9rem;
+}

@@ -1,77 +1,184 @@
 import jsPDF from 'jspdf';
 
 export const generatePrescriptionPDF = (patient, clinicInfo, medicines, clinicalNotes = "") => {
-    const doc = new jsPDF();
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = doc.internal.pageSize.getWidth();
+    let currentY = 0;
 
-    // Header
-    doc.setFillColor(16, 185, 129); // emerald-500
-    doc.rect(0, 0, 210, 45, 'F');
+    // Header Color Strip
+    doc.setFillColor(15, 23, 42); // Deep Slate from EHR theme
+    doc.rect(0, 0, pageWidth, 40, 'F');
 
+    // Clinic Info (Header)
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(28);
+    doc.setFontSize(24);
     doc.setFont('helvetica', 'bold');
-    doc.text(clinicInfo.clinic_name || "MedConnect+", 20, 25);
+    doc.text(clinicInfo?.clinic_name || "MedConnect Regional Hospital", 20, 22);
 
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
-    doc.text(clinicInfo.clinic_address || "Healthcare Ecosystem Reimagined", 20, 35);
+    doc.text(clinicInfo?.clinic_address || "Opp. Station Rd, Health City  •  Ph: +91 800-444-MEDIC", 20, 32);
 
-    // Doctor & Patient Info
+    currentY = 55;
+
+    // Doctor & Patient Layout (Grid style)
     doc.setTextColor(15, 23, 42);
-    doc.setFontSize(12);
+    
+    // --> Doctor Box (Left)
+    doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
-    doc.text("DOCTOR", 20, 60);
-    doc.text("PATIENT", 110, 60);
-
+    doc.text(`Dr. ${clinicInfo?.full_name || "Primary Care Physician"}`, 20, currentY);
+    
+    doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
-    const doctorDisplay = `Dr. ${clinicInfo.full_name}${clinicInfo.degree ? ', ' + clinicInfo.degree : ''}`;
-    doc.text(doctorDisplay, 20, 67);
-    doc.text(`${patient.name} (ID: ${patient.id})`, 110, 67);
-    doc.text(`Age: ${patient.age} | Gender: ${patient.gender}`, 110, 73);
+    doc.setTextColor(100, 116, 139);
+    doc.text(`${clinicInfo?.degree || "MBBS, MD - General Medicine"}`, 20, currentY + 6);
+    doc.text(`Reg No: ${clinicInfo?.reg_no || "MCI-4829103"}`, 20, currentY + 12);
+    
+    // --> Prescribing Date (Top Right)
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(15, 23, 42);
+    doc.text(`Date: ${new Date().toLocaleDateString('en-IN')}`, pageWidth - 20, currentY, { align: 'right' });
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Time: ${new Date().toLocaleTimeString('en-IN', {hour: '2-digit', minute:'2-digit'})}`, pageWidth - 20, currentY + 6, { align: 'right' });
 
-    doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 80);
+    currentY += 25;
 
-    doc.setDrawColor(203, 213, 225); // slate-300
-    doc.line(20, 85, 190, 85);
+    // Horizontal Divider
+    doc.setDrawColor(226, 232, 240); // slate-200
+    doc.setLineWidth(0.5);
+    doc.line(20, currentY, pageWidth - 20, currentY);
+    currentY += 10;
 
-    // Clinical Notes
-    if (clinicalNotes) {
+    // Patient Information Block (Light Gray Background)
+    doc.setFillColor(248, 250, 252);
+    doc.rect(20, currentY, pageWidth - 40, 30, 'F');
+    
+    doc.setTextColor(15, 23, 42);
+    doc.setFontSize(10);
+    
+    // Row 1
+    doc.setFont('helvetica', 'bold');
+    doc.text("Patient Name:", 25, currentY + 8);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${patient.name}`, 55, currentY + 8);
+
+    doc.setFont('helvetica', 'bold');
+    doc.text("EHR ID:", 120, currentY + 8);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${patient.id.substring(0, 8)}`, 140, currentY + 8);
+
+    // Row 2
+    doc.setFont('helvetica', 'bold');
+    doc.text("Age / Sex:", 25, currentY + 16);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${patient.age} Yrs / ${patient.gender}`, 55, currentY + 16);
+
+    doc.setFont('helvetica', 'bold');
+    doc.text("Weight:", 120, currentY + 16);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${patient.weight || '--'} kg`, 140, currentY + 16);
+
+    // Row 3
+    doc.setFont('helvetica', 'bold');
+    doc.text("Blood Pressure:", 25, currentY + 24);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${patient.bp || '120/80'} mmHg`, 55, currentY + 24);
+
+    doc.setFont('helvetica', 'bold');
+    doc.text("Blood Group:", 120, currentY + 24);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${patient.blood_type || '--'}`, 140, currentY + 24);
+
+    currentY += 40;
+
+    // Clinical Notes Section
+    if (clinicalNotes && clinicalNotes.trim() !== '') {
         doc.setFont('helvetica', 'bold');
-        doc.text("Clinical Notes / Symptoms:", 20, 95);
+        doc.setFontSize(12);
+        doc.text("Chief Complaints & Clinical Presentation", 20, currentY);
+        
+        currentY += 7;
         doc.setFont('helvetica', 'normal');
-        const splitNotes = doc.splitTextToSize(clinicalNotes, 170);
-        doc.text(splitNotes, 20, 102);
+        doc.setFontSize(10);
+        doc.setTextColor(71, 85, 105); // slate-600
+        
+        const splitNotes = doc.splitTextToSize(clinicalNotes, pageWidth - 40);
+        doc.text(splitNotes, 20, currentY);
+        
+        currentY += (splitNotes.length * 5) + 10;
+    } else {
+        currentY += 5;
     }
 
-    // Medications Table
-    let yPos = clinicalNotes ? 120 : 95;
+    // Rx Symbol
+    doc.setFont('helvetica', 'bolditalic');
+    doc.setFontSize(32);
+    doc.setTextColor(15, 23, 42); // Slate 900
+    doc.text("Rx", 20, currentY);
+    currentY += 15;
+
+    // Medications Table Header
+    doc.setFillColor(241, 245, 249); // slate-100
+    doc.rect(20, currentY - 6, pageWidth - 40, 10, 'F');
+    
     doc.setFont('helvetica', 'bold');
-    doc.text("Prescribed Medications:", 20, yPos);
-
-    yPos += 10;
-    doc.setFillColor(248, 250, 252); // slate-50
-    doc.rect(20, yPos - 5, 170, 7, 'F');
     doc.setFontSize(10);
-    doc.text("Medicine", 25, yPos);
-    doc.text("Dosage", 80, yPos);
-    doc.text("Frequency", 120, yPos);
-    doc.text("Duration", 160, yPos);
+    doc.setTextColor(15, 23, 42);
+    doc.text("Medicine Name", 25, currentY);
+    doc.text("Frequency", 110, currentY);
+    doc.text("Duration", 145, currentY);
 
-    yPos += 10;
+    currentY += 12;
+
+    // Medications List
     doc.setFont('helvetica', 'normal');
     medicines.forEach((med, index) => {
-        doc.text(med.name, 25, yPos);
-        doc.text(med.dose || "-", 80, yPos);
-        doc.text(med.frequency, 120, yPos);
-        doc.text(med.duration, 160, yPos);
-        yPos += 8;
+        // Line format
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(15, 23, 42);
+        doc.text(`${index + 1}. ${med.name}`, 25, currentY);
+        
+        doc.setFont('helvetica', 'normal');
+        doc.text(`${med.frequency || 'As Directed'}`, 110, currentY);
+        doc.text(`${med.duration || '5 Days'}`, 145, currentY);
+        
+        // Instructions sub-line
+        if (med.instructions) {
+            currentY += 5;
+            doc.setFontSize(9);
+            doc.setTextColor(100, 116, 139);
+            doc.text(`Note: ${med.instructions}`, 30, currentY);
+            doc.setFontSize(10);
+        }
+
+        currentY += 10;
+        
+        // Page break if too long
+        if (currentY > 250) {
+            doc.addPage();
+            currentY = 20;
+        }
     });
 
-    // Footer
-    doc.setFontSize(8);
-    doc.setTextColor(100, 116, 139);
-    doc.text("This is an electronically generated prescription and does not require a physical signature.", 105, 280, { align: 'center' });
-    doc.text("Verify QR code on the patient portal for authenticity.", 105, 285, { align: 'center' });
+    // Signatures and Footer
+    let footerY = Math.max(currentY + 20, 240);
 
-    doc.save(`Prescription_${patient.id}_${Date.now()}.pdf`);
+    doc.setDrawColor(203, 213, 225);
+    doc.line(pageWidth - 70, footerY, pageWidth - 20, footerY); // Signature Line
+    
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(15, 23, 42);
+    doc.text("Doctor's Signature / E-Sign", pageWidth - 45, footerY + 6, { align: 'center' });
+
+    // Tech Footer Note
+    doc.setFontSize(8);
+    doc.setTextColor(148, 163, 184); // slate-400
+    doc.text("Document generated securely via MedConnect+ Electronic Health Record System.", pageWidth / 2, 280, { align: 'center' });
+    doc.setTextColor(100, 116, 139);
+    doc.text("Valid only with digital QR verification or stamped clinic seal.", pageWidth / 2, 284, { align: 'center' });
+
+    // Save PDF
+    doc.save(`Clinical_Order_${patient.name.replace(/\s+/g, '_')}_${Date.now()}.pdf`);
 };

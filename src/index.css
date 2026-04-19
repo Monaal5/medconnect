@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
 
 :root {
-  /* Premium Light-Glass Theme */
-  --primary: #10b981;
-  --primary-light: #34d399;
-  --primary-dark: #059669;
-  --secondary: #3b82f6;
+  /* MediBuddy Theme */
+  --primary: #0066dc; /* MediBuddy Blue */
+  --primary-light: #4d94e8;
+  --primary-dark: #004ba3;
+  --secondary: #efcf58; /* MediBuddy Gold */
   --danger: #ef4444;
   --success: #10b981;
   --warning: #f59e0b;
@@ -57,9 +57,8 @@ body::before {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: 
-    radial-gradient(circle at 15% 50%, rgba(16, 185, 129, 0.03), transparent 25%),
-    radial-gradient(circle at 85% 30%, rgba(59, 130, 246, 0.03), transparent 25%);
+  background: url('./assets/login_bg.png') center/cover no-repeat;
+  opacity: 0.15; /* Soften the background for the entire app to maintain readability */
   z-index: -1;
   pointer-events: none;
 }
@@ -265,4 +264,23 @@ button {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
+}
+
+/* Global Custom Scrollbar */
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(16, 185, 129, 0.25);
+  border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(16, 185, 129, 0.5);
 }
