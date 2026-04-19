@@ -30,8 +30,13 @@ export const GlobalProvider = ({ children }) => {
         });
 
         const fetchProfile = async (userId) => {
-            const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
-            if (data) setProfile(data);
+            const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).maybeSingle();
+            if (data) {
+                setProfile(data);
+            } else {
+                console.warn("No DB profile found for user. Applying fallback.");
+                setProfile({ id: userId, role: 'patient', full_name: 'Guest User' });
+            }
         };
 
         const fetchData = async () => {

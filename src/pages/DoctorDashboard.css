@@ -288,3 +288,33 @@
     display: flex;
     flex-direction: column;
 }
+
+/* Print Styles for PDF Generation */
+@media print {
+    .print-hidden, .ehr-sidebar, .ehr-header {
+        display: none !important;
+    }
+    
+    .dashboard-layout-professional {
+        height: auto !important;
+        background-color: white !important;
+    }
+
+    .ehr-scroll-area {
+        overflow: visible !important;
+        padding: 0 !important;
+        background-color: white !important;
+    }
+
+    .ehr-main-content {
+        overflow: visible !important;
+    }
+
+    .printable-invoice {
+        border: none !important;
+        box-shadow: none !important;
+        width: 100% !important;
+        max-width: none !important;
+        padding: 0 !important;
+    }
+}

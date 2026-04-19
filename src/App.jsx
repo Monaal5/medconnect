@@ -8,6 +8,7 @@ import Inventory from './pages/Inventory';
 import Rentals from './pages/Rentals';
 import LabDashboard from './pages/LabDashboard';
 import ChemistDashboard from './pages/ChemistDashboard';
+import VendorDashboard from './pages/VendorDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import Placeholder from './components/Placeholder';
 import LandingPage from './pages/LandingPage';
@@ -23,6 +24,13 @@ const RequireAuth = ({ children }) => {
   return user ? children : <Navigate to="/login" />;
 };
 
+const LoginRedirect = () => {
+  const { user, profile, loading } = useGlobal();
+  if (loading || (user && !profile)) return <div className="loading-screen">Authenticating Hub Access...</div>;
+  if (user && profile) return <Navigate to={`/${profile.role}`} />;
+  return <LoginPage />;
+};
+
 function App() {
   const { user } = useGlobal();
 
@@ -34,7 +42,7 @@ function App() {
         <Route path="/online-doctor-consultation" element={<Consultation />} />
         <Route path="/medicine" element={<Pharmacy />} />
         <Route path="/labtest" element={<LabBookings />} />
-        <Route path="/login" element={user ? <Navigate to="/doctor" /> : <LoginPage />} />
+        <Route path="/login" element={<LoginRedirect />} />
 
         {/* Doctor Portal */}
         <Route path="/doctor/*" element={
@@ -46,66 +54,35 @@ function App() {
         {/* Patient Portal */}
         <Route path="/patient/*" element={
           <RequireAuth>
-            <Layout role="patient">
-              <Routes>
-                <Route path="/" element={<PatientDashboard />} />
-                <Route path="/prescriptions" element={<Placeholder title="My Prescriptions & History" role="patient" />} />
-                <Route path="/labs" element={<LabDashboard />} />
-                <Route path="/rentals" element={<Rentals />} />
-              </Routes>
-            </Layout>
+            <PatientDashboard />
           </RequireAuth>
         } />
 
         {/* Chemist Portal */}
         <Route path="/chemist/*" element={
           <RequireAuth>
-            <Layout role="chemist">
-              <Routes>
-                <Route path="/" element={<ChemistDashboard />} />
-                <Route path="/inventory" element={<Inventory />} />
-                <Route path="/bills" element={<Placeholder title="GST Billing & Invoices" role="chemist" />} />
-              </Routes>
-            </Layout>
+            <ChemistDashboard />
           </RequireAuth>
         } />
 
         {/* Lab Portal */}
         <Route path="/lab/*" element={
           <RequireAuth>
-            <Layout role="lab">
-              <Routes>
-                <Route path="/" element={<LabDashboard />} />
-                <Route path="/tests" element={<Placeholder title="Test Queue Management" role="lab" />} />
-                <Route path="/uploads" element={<Placeholder title="Medical Result Uploads" role="lab" />} />
-              </Routes>
-            </Layout>
+            <LabDashboard />
           </RequireAuth>
         } />
 
         {/* Rental Portal */}
         <Route path="/vendor/*" element={
           <RequireAuth>
-            <Layout role="vendor">
-              <Routes>
-                <Route path="/" element={<Placeholder title="Rental Vendor Channel" role="vendor" />} />
-                <Route path="/stock" element={<Rentals />} />
-                <Route path="/rentals" element={<Placeholder title="Rental Fulfillment" role="vendor" />} />
-              </Routes>
-            </Layout>
+            <VendorDashboard />
           </RequireAuth>
         } />
 
         {/* Admin Portal */}
         <Route path="/admin/*" element={
           <RequireAuth>
-            <Layout role="admin">
-              <Routes>
-                <Route path="/" element={<AdminDashboard />} />
-                <Route path="/users" element={<Placeholder title="User Access Control" role="admin" />} />
-                <Route path="/logs" element={<Placeholder title="System Audit Logs" role="admin" />} />
-              </Routes>
-            </Layout>
+            <AdminDashboard />
           </RequireAuth>
         } />
 
