@@ -318,3 +318,22 @@
         padding: 0 !important;
     }
 }
+
+.ehr-status-toast {
+    margin-left: 1rem;
+    padding: 0.4rem 0.8rem;
+    background: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    animation: fadeInOut 3s forwards;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(-5px); }
+    15% { opacity: 1; transform: translateY(0); }
+    85% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-5px); }
+}

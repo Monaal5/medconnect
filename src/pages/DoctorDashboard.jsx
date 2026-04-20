@@ -16,6 +16,9 @@ const DoctorDashboard = ({ view: initialView }) => {
     const [showStockModal, setShowStockModal] = useState(false);
     
     const [view, setView] = useState(initialView || 'patients');
+    const [patientSearch, setPatientSearch] = useState('');
+    const [stockSearch, setStockSearch] = useState('');
+    const [statusMessage, setStatusMessage] = useState(null);
 
     const [newPatient, setNewPatient] = useState({ name: '', age: '', gender: '', blood_type: '', weight: '', bp: '', glucose: '' });
     const [newMed, setNewMed] = useState({ name: '', category: '', stock: '', price: '' });
@@ -46,6 +49,8 @@ const DoctorDashboard = ({ view: initialView }) => {
     const handleUpdateClinic = async (e) => {
         e.preventDefault();
         await updateProfile(clinicForm);
+        setStatusMessage('Clinic information updated successfully.');
+        setTimeout(() => setStatusMessage(null), 3000);
         setView('patients');
     };
 
@@ -55,19 +60,39 @@ const DoctorDashboard = ({ view: initialView }) => {
         if (added) {
             setSelectedPatient(added);
             setView('prescribe');
+            setStatusMessage(`Patient ${added.name} registered.`);
+        } else {
+            setStatusMessage('Error registering patient.');
         }
+        setTimeout(() => setStatusMessage(null), 3000);
         setShowPatientModal(false);
         setNewPatient({ name: '', age: '', gender: '', blood_type: '', weight: '', bp: '', glucose: '' });
     };
 
     const handleAddMed = async (e) => {
         e.preventDefault();
-        await addMedicine(newMed);
+        const added = await addMedicine(newMed);
+        if (added) {
+            setStatusMessage(`Medicine ${added.name} added to inventory.`);
+        } else {
+            setStatusMessage('Error adding medicine.');
+        }
+        setTimeout(() => setStatusMessage(null), 3000);
         setShowStockModal(false);
         setNewMed({ name: '', category: '', stock: '', price: '' });
     };
 
     if (loading) return <div style={{padding: '3rem', textAlign: 'center', fontFamily: 'Inter'}}>Loading EHR System...</div>;
+
+    const filteredPatients = patients.filter(p => 
+        p.name?.toLowerCase().includes(patientSearch.toLowerCase()) || 
+        p.id?.toLowerCase().includes(patientSearch.toLowerCase())
+    );
+
+    const filteredMeds = medicines.filter(m => 
+        m.name?.toLowerCase().includes(stockSearch.toLowerCase()) || 
+        m.category?.toLowerCase().includes(stockSearch.toLowerCase())
+    );
 
     const lowStockMeds = medicines.filter(m => m.stock < 20);
 
@@ -121,6 +146,9 @@ const DoctorDashboard = ({ view: initialView }) => {
                         {(view === 'prescribe' || view === 'overview') && (selectedPatient ? `Clinical Order: ${selectedPatient.name}` : 'Clinical Orders')}
                         {view === 'inventory' && 'Inventory Management'}
                         {view === 'settings' && 'Clinic Configuration'}
+                        {statusMessage && (
+                            <span className="ehr-status-toast">{statusMessage}</span>
+                        )}
                     </div>
                     <div className="ehr-header-actions">
                         <span style={{fontSize: '0.85rem', color: '#64748b', fontWeight: '600'}}>
@@ -148,7 +176,14 @@ const DoctorDashboard = ({ view: initialView }) => {
                                 <h3 className="ehr-card-title">Registered Patients</h3>
                                 <div style={{position: 'relative'}}>
                                     <Search size={16} style={{position: 'absolute', left: '10px', top: '10px', color: '#888'}}/>
-                                    <input type="text" placeholder="Search EHR id, name..." className="ehr-input" style={{paddingLeft: '2rem', width: '250px'}} />
+                                    <input 
+                                        type="text" 
+                                        placeholder="Search EHR id, name..." 
+                                        className="ehr-input" 
+                                        style={{paddingLeft: '2rem', width: '250px'}} 
+                                        value={patientSearch}
+                                        onChange={e => setPatientSearch(e.target.value)}
+                                    />
                                 </div>
                             </div>
                             <div className="ehr-table-wrapper">
@@ -164,7 +199,7 @@ const DoctorDashboard = ({ view: initialView }) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {patients.map(p => (
+                                        {filteredPatients.map(p => (
                                             <tr key={p.id}>
                                                 <td style={{fontFamily: 'monospace', color: '#64748b'}}>{p.id.substring(0,8).toUpperCase()}</td>
                                                 <td style={{fontWeight: '600'}}>{p.name}</td>
@@ -181,10 +216,10 @@ const DoctorDashboard = ({ view: initialView }) => {
                                                 </td>
                                             </tr>
                                         ))}
-                                        {patients.length === 0 && (
+                                        {filteredPatients.length === 0 && (
                                             <tr>
                                                 <td colSpan="6" style={{textAlign: 'center', padding: '3rem', color: '#888'}}>
-                                                    No patients registered in the directory.
+                                                    {patientSearch ? "No matching patients found." : "No patients registered in the directory."}
                                                 </td>
                                             </tr>
                                         )}
@@ -216,6 +251,17 @@ const DoctorDashboard = ({ view: initialView }) => {
                         <div className="ehr-card">
                             <div className="ehr-card-header">
                                 <h3 className="ehr-card-title">Pharmacy Stock Levels</h3>
+                                <div style={{position: 'relative'}}>
+                                    <Search size={16} style={{position: 'absolute', left: '10px', top: '10px', color: '#888'}}/>
+                                    <input 
+                                        type="text" 
+                                        placeholder="Filter by name, category..." 
+                                        className="ehr-input" 
+                                        style={{paddingLeft: '2rem', width: '250px'}} 
+                                        value={stockSearch}
+                                        onChange={e => setStockSearch(e.target.value)}
+                                    />
+                                </div>
                             </div>
                             <div className="ehr-table-wrapper">
                                 <table className="ehr-table">
@@ -228,7 +274,7 @@ const DoctorDashboard = ({ view: initialView }) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {medicines.map(m => (
+                                        {filteredMeds.map(m => (
                                             <tr key={m.id}>
                                                 <td style={{fontWeight: '600'}}>{m.name}</td>
                                                 <td>{m.category || 'General'}</td>
@@ -244,6 +290,13 @@ const DoctorDashboard = ({ view: initialView }) => {
                                                 </td>
                                             </tr>
                                         ))}
+                                        {filteredMeds.length === 0 && (
+                                            <tr>
+                                                <td colSpan="4" style={{textAlign: 'center', padding: '3rem', color: '#888'}}>
+                                                    {stockSearch ? "No matching medicines found in inventory." : "No medicines in pharmacy stock."}
+                                                </td>
+                                            </tr>
+                                        )}
                                     </tbody>
                                 </table>
                             </div>

@@ -136,13 +136,21 @@ export const GlobalProvider = ({ children }) => {
     };
 
     const addPatient = async (patientData) => {
-        const { error } = await supabase.from('patients').insert([patientData]);
-        if (error) console.error("Add patient error:", error);
+        const { data, error } = await supabase.from('patients').insert([patientData]).select();
+        if (error) {
+            console.error("Add patient error:", error);
+            return null;
+        }
+        return data ? data[0] : null;
     };
 
     const addMedicine = async (medicineData) => {
-        const { error } = await supabase.from('medicines').insert([medicineData]);
-        if (error) console.error("Add medicine error:", error);
+        const { data, error } = await supabase.from('medicines').insert([medicineData]).select();
+        if (error) {
+            console.error("Add medicine error:", error);
+            return null;
+        }
+        return data ? data[0] : null;
     };
 
     const addLabSample = async (sampleData) => {
